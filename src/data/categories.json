@@ -1,0 +1,56 @@
+[
+  {
+    "category": "Standard Parameters",
+    "keys": [
+      {
+        "name": "SIMPLE",
+        "title": "Data conform to FITS standard",
+        "description": "The SIMPLE keyword is required to be the first keyword in the primary header of all standard FITS files and is not permitted in extention headers. The value shall contain a logical constant with the value T if the file conforms to this standard.",
+        "attributes": {
+          "type": "boolean",
+          "sql_dtype": "nchar(1)",
+          "calculation": "",
+          "default_value": "T"
+        }
+      },
+      {
+        "name": "BITPIX",
+        "title": "bits per data value",
+        "description": "The value field shall contain an integer that specifies the number of bits that represent a data value in the associated data array. BITPIX = 0 for the primary header. For an image extension, 16 is uncalibrated and -32 is calibrated. For group information captured in an ASCII table extension BITPIX = 8, denoting that the array contains ASCII characters.",
+        "attributes": {
+          "type": "integer",
+          "sql_dtype": "smallint",
+          "calculation": "",
+          "default_value": "0"
+        }
+      }
+    ]
+  },
+  {
+    "category": "Standard Parameters2",
+    "keys": [
+      {
+        "name": "SIMPLE2",
+        "title": "Data conform to FITS standard",
+        "description": "The SIMPLE keyword is required to be the first keyword in the primary header of all standard FITS files and is not permitted in extention headers. The value shall contain a logical constant with the value T if the file conforms to this standard.",
+        "attributes": {
+          "type": "boolean",
+          "sql_dtype": "nchar(1)",
+          "calculation": "",
+          "default_value": "T"
+        }
+      },
+      {
+        "name": "BITPIX2",
+        "title": "bits per data value",
+        "description": "The value field shall contain an integer that specifies the number of bits that represent a data value in the associated data array. BITPIX = 0 for the primary header. For an image extension, 16 is uncalibrated and -32 is calibrated. For group information captured in an ASCII table extension BITPIX = 8, denoting that the array contains ASCII characters.",
+        "attributes": {
+          "type": "integer",
+          "sql_dtype": "smallint",
+          "calculation": "",
+          "default_value": "0"
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "type": "FITS Data type of FITS keyword (string, integer, float, boolean)",
+  "sql_dtype": "Data type of the Archive Catalog database field which corresponds to the FITS keyword (datetime2, float, int, smallint, tinyint, nchar, nvarchar)",
+  "calculation": "Algorithm used to determine the FITS keyword, for documentation only",
+  "default_value": "The default value for the FITS keyword, used by software\t",
+  "example": "A sample FITS keyword value\t",
+  "units": "FITS keyword units (e.g., arcseconds, degrees), for documentation only\t",
+  "sw_source": "Used by the code to retrieve values from database or services to fill the FITS keyword (e.g., PPS:miri_lrs_dither.pattern_type)\t",
+  "source": "Subsystem that provides the FITS keyword value, for documentation only\t",
+  "level": "Science data level (e.g., 1a, 1b, 2, 2b) where the FITS keyword is first added to the FITS header\t",
+  "si": "Science Instrument to which the FITS keyword applies (e.g., FGS, MIRI, NIRCAM, NIRISS, NIRSPEC, Multiple)\t",
+  "section": "Science Instrument to which the FITS keyword applies (e.g., FGS, MIRI, NIRCAM, NIRISS, NIRSPEC, Multiple)\t",
+  "fits_hdu": "The name of the FITS Header-Data Unit in which the keyword is stored (e.g. Primary, SCI)\t",
+  "destination": "List of Archive Catalog tables and fields where FITS keyword value is stored (e.g., [“ScienceCommon.filter”, ”NirissScience.filter”])\t",
+  "enum": "Enumerated list of possible values\t"
+}
