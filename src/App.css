@@ -36,3 +36,50 @@
     transform: rotate(360deg);
   }
 }
+
+table {
+  /*font-size: 10px;*/
+  border-collapse: collapse;
+  margin-left: 16px;
+  margin-right: 16px;
+  margin-bottom: 20px;
+  padding: 0;
+  table-layout: fixed;
+  word-wrap: break-word;
+}
+
+table tr {
+  border-top-width: 1px;
+  border-top-style: solid;
+  border-top-color: #ccc;
+  background-color: #fff;
+  margin: 0;
+  padding: 0;
+}
+
+table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+table tr th[align="center"], table tr td[align="center"] {
+  text-align: center;
+}
+
+table tr th, table tr td {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #ccc;
+  text-align: left;
+  margin: 0;
+  padding: 5px 13px;
+}
+
+table th {
+  white-space: nowrap;
+}
+
+table tbody tr td p, table tbody tr td div p {
+  padding: 0 0;
+  border-width: 0;
+  margin: 0;
+}

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import './App.css';
 
-import {makeStyles, Theme, createStyles} from '@material-ui/core/styles';
+import {fade, makeStyles, Theme, createStyles} from '@material-ui/core/styles';
 import TreeView from '@material-ui/lab/TreeView';
 import TreeItem, {TreeItemProps} from '@material-ui/lab/TreeItem';
 import Typography from '@material-ui/core/Typography';
@@ -15,7 +15,12 @@ import {ClassNameMap} from "@material-ui/core/styles/withStyles";
 
 import categories_json from './data/categories.json';
 import {Grid, Paper} from "@material-ui/core";
-
+import Toolbar from "@material-ui/core/Toolbar";
+import AppBar from "@material-ui/core/AppBar";
+import IconButton from "@material-ui/core/IconButton";
+import MenuIcon from '@material-ui/icons/Menu';
+import SearchIcon from '@material-ui/icons/Search';
+import InputBase from "@material-ui/core/InputBase";
 
 declare module 'csstype' {
     interface Properties {
@@ -32,18 +37,16 @@ type StyledTreeItemProps = TreeItemProps & {
     labelText: string;
 };
 
-interface Attributes {
-    type: string,
-    sql_dtype: string,
-    calculation: string,
-    default_value: string
+interface Attribute {
+    name: string,
+    value: string
 }
 
 interface Key {
     name: string,
     title: string,
     description: string,
-    attributes: Attributes
+    attributes: Array<Attribute>
 }
 
 interface Category {
@@ -156,6 +159,67 @@ const useStyles = makeStyles((theme: Theme) =>
         control: {
             padding: theme.spacing(2),
         },
+        grow: {
+            flexGrow: 1,
+        },
+        menuButton: {
+            marginRight: theme.spacing(2),
+        },
+        title: {
+            display: 'none',
+            [theme.breakpoints.up('sm')]: {
+                display: 'block',
+            },
+        },
+        search: {
+            position: 'relative',
+            borderRadius: theme.shape.borderRadius,
+            backgroundColor: fade(theme.palette.common.white, 0.15),
+            '&:hover': {
+                backgroundColor: fade(theme.palette.common.white, 0.25),
+            },
+            marginRight: theme.spacing(2),
+            marginLeft: 0,
+            width: '100%',
+            [theme.breakpoints.up('sm')]: {
+                marginLeft: theme.spacing(3),
+                width: 'auto',
+            },
+        },
+        searchIcon: {
+            padding: theme.spacing(0, 2),
+            height: '100%',
+            position: 'absolute',
+            pointerEvents: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+        inputRoot: {
+            color: 'inherit',
+        },
+        inputInput: {
+            padding: theme.spacing(1, 1, 1, 0),
+            // vertical padding + font size from searchIcon
+            paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+            transition: theme.transitions.create('width'),
+            width: '100%',
+            [theme.breakpoints.up('md')]: {
+                width: '20ch',
+            },
+        },
+        sectionDesktop: {
+            display: 'none',
+            [theme.breakpoints.up('md')]: {
+                display: 'flex',
+            },
+        },
+        sectionMobile: {
+            display: 'flex',
+            [theme.breakpoints.up('md')]: {
+                display: 'none',
+            },
+        },
     }),
 );
 
@@ -195,14 +259,14 @@ export default function App() {
         </TreeView>;
     }
 
-    function makeKeyRows(keys: Array<Key>) {
-        return keys.map(key =>
-            <tr>
-                <td>
-                    type
+    function makeKeyRows(key: Key) {
+        return key.attributes.map(attr =>
+            <tr key={attr.name}>
+                <td key={attr.name}>
+                    {attr.name}
                 </td>
-                <td>
-                    {key.attributes.type}
+                <td key={attr.value}>
+                    {attr.value}
                 </td>
             </tr>
         );
@@ -220,14 +284,14 @@ export default function App() {
                         <h2>{keyItem.title}</h2>
                         <p>{keyItem.description}</p>
                         <table>
-                            <thead>
+                            <thead key={"thead"}>
                             <tr>
-                                <th>Attribute</th>
-                                <th>Value</th>
+                                <th key={"Attribute"}>Attribute</th>
+                                <th key={"Value"}>Value</th>
                             </tr>
                             </thead>
                             <tbody>
-                            {makeKeyRows(cat.keys)}
+                            {makeKeyRows(keyItem)}
                             </tbody>
                         </table>
                     </div>
@@ -235,6 +299,40 @@ export default function App() {
             }
         }
         return <div>Click on keyword in tree to show details.</div>
+    }
+
+    function makeAppBar() {
+        return (
+            <AppBar position="static">
+                <Toolbar>
+                    <IconButton
+                        edge="start"
+                        className={classes.menuButton}
+                        color="inherit"
+                        aria-label="open drawer"
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                    <Typography className={classes.title} variant="h6" noWrap>
+                        TMT FITS Keyword Dictionary
+                    </Typography>
+                    <div className={classes.search}>
+                        <div className={classes.searchIcon}>
+                            <SearchIcon />
+                        </div>
+                        <InputBase
+                            placeholder="Search…"
+                            classes={{
+                                root: classes.inputRoot,
+                                input: classes.inputInput,
+                            }}
+                            inputProps={{ 'aria-label': 'search' }}
+                        />
+                    </div>
+                    <div className={classes.grow} />
+                </Toolbar>
+            </AppBar>
+        );
     }
 
 
@@ -253,11 +351,21 @@ export default function App() {
 
     const grid = <Grid container className={classes.root} spacing={2}>
         <Grid item xs={12}>
-            <Grid container justify="flex-start" spacing={1}>
+            <Grid container justify="flex-start" spacing={3}>
                 <Grid key="treeView" item>
+                    <Toolbar>
+                        <Typography variant="h6" className="tree-title">
+                            Browse Keywords
+                        </Typography>
+                    </Toolbar>
                     {treeView}
                 </Grid>
                 <Grid key="detailView" item>
+                    <Toolbar>
+                        <Typography variant="h6" className="table-title">
+                            Details
+                        </Typography>
+                    </Toolbar>
                     <Paper
                         // variant="outlined"
                         className={classes.paper}>
@@ -267,7 +375,14 @@ export default function App() {
             </Grid>
         </Grid>
     </Grid>
-    return (grid);
+
+    const appBar = makeAppBar();
+
+    const layout = <div>
+        {appBar}
+        {grid}
+    </div>
+    return (layout);
 }
 
 
