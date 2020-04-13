@@ -311,14 +311,14 @@ export default function App() {
                         color="inherit"
                         aria-label="open drawer"
                     >
-                        <MenuIcon />
+                        <MenuIcon/>
                     </IconButton>
                     <Typography className={classes.title} variant="h6" noWrap>
                         TMT FITS Keyword Dictionary
                     </Typography>
                     <div className={classes.search}>
                         <div className={classes.searchIcon}>
-                            <SearchIcon />
+                            <SearchIcon/>
                         </div>
                         <InputBase
                             placeholder="Search…"
@@ -326,10 +326,10 @@ export default function App() {
                                 root: classes.inputRoot,
                                 input: classes.inputInput,
                             }}
-                            inputProps={{ 'aria-label': 'search' }}
+                            inputProps={{'aria-label': 'search'}}
                         />
                     </div>
-                    <div className={classes.grow} />
+                    <div className={classes.grow}/>
                 </Toolbar>
             </AppBar>
         );
@@ -349,12 +349,12 @@ export default function App() {
     const treeView = makeTreeView(classes, catItems);
     const detailView = makeDetailView();
 
-    const grid = <Grid container className={classes.root} spacing={2}>
+    const grid = <Grid container className={classes.root} spacing={6}>
         <Grid item xs={12}>
-            <Grid container justify="flex-start" spacing={3}>
+            <Grid container justify="flex-start" spacing={6}>
                 <Grid key="treeView" item>
                     <Toolbar>
-                        <Typography variant="h6" className="tree-title">
+                        <Typography variant="subtitle1" className="tree-title">
                             Browse Keywords
                         </Typography>
                     </Toolbar>
@@ -362,7 +362,7 @@ export default function App() {
                 </Grid>
                 <Grid key="detailView" item>
                     <Toolbar>
-                        <Typography variant="h6" className="table-title">
+                        <Typography variant="subtitle1" className="table-title">
                             Details
                         </Typography>
                     </Toolbar>
