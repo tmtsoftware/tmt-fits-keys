@@ -53,6 +53,9 @@ interface Category {
 
 const categories = categories_json as Array<Category>;
 
+// Separator between category and keyword for nodeId
+const sep = "|";
+
 const useTreeItemStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
@@ -146,8 +149,9 @@ const useStyles = makeStyles((theme: Theme) =>
             flexGrow: 1,
         },
         paper: {
-            height: 140,
-            width: 100,
+            maxWidth: 800,
+            margin: `${theme.spacing(1)}px auto`,
+            padding: theme.spacing(2),
         },
         control: {
             padding: theme.spacing(2),
@@ -162,7 +166,7 @@ export default function App() {
     const classes = useStyles();
 
     function makeKeyItemId(cat: Category, key: Key) {
-        return cat.category + "." + key.name;
+        return cat.category + sep + key.name;
     }
 
     function keyItems(cat: Category) {
@@ -176,14 +180,12 @@ export default function App() {
     }
 
     function nodeSelected(event: object, value: string) {
-        console.log("XXX Node selected: " + value)
         setSelectedNode(value)
     }
 
     function makeTreeView(classes: ClassNameMap, catItems: JSX.Element[]) {
         return <TreeView
             className={classes.root}
-            // defaultExpanded={['3']}  // FIXME
             defaultCollapseIcon={<ArrowDropDownIcon/>}
             defaultExpandIcon={<ArrowRightIcon/>}
             defaultEndIcon={<div style={{width: 24}}/>}
@@ -193,9 +195,46 @@ export default function App() {
         </TreeView>;
     }
 
+    function makeKeyRows(keys: Array<Key>) {
+        return keys.map(key =>
+            <tr>
+                <td>
+                    type
+                </td>
+                <td>
+                    {key.attributes.type}
+                </td>
+            </tr>
+        );
+    }
+
     function makeDetailView() {
-        console.log("XXX makeDetailView for " + selectedNode)
-        return <div>{selectedNode}</div>
+        const [category, key] = selectedNode.split(sep)
+        if (key) {
+            const cat = categories.find(c => c.category === category)
+            if (cat) {
+                const keyItem = cat.keys.find(k => k.name === key)
+                if (keyItem) {
+                    return <div>
+                        <h1>{keyItem.name}</h1>
+                        <h2>{keyItem.title}</h2>
+                        <p>{keyItem.description}</p>
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>Attribute</th>
+                                <th>Value</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {makeKeyRows(cat.keys)}
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            }
+        }
+        return <div>Click on keyword in tree to show details.</div>
     }
 
 
@@ -219,7 +258,9 @@ export default function App() {
                     {treeView}
                 </Grid>
                 <Grid key="detailView" item>
-                    <Paper variant="outlined" className={classes.paper}>
+                    <Paper
+                        // variant="outlined"
+                        className={classes.paper}>
                         {detailView}
                     </Paper>
                 </Grid>
