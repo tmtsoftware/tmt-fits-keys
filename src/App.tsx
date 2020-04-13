@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './App.css';
 
 import {makeStyles, Theme, createStyles} from '@material-ui/core/styles';
@@ -14,6 +14,8 @@ import {SvgIconProps} from '@material-ui/core/SvgIcon';
 import {ClassNameMap} from "@material-ui/core/styles/withStyles";
 
 import categories_json from './data/categories.json';
+import {Grid, Paper} from "@material-ui/core";
+
 
 declare module 'csstype' {
     interface Properties {
@@ -29,6 +31,27 @@ type StyledTreeItemProps = TreeItemProps & {
     labelInfo?: string;
     labelText: string;
 };
+
+interface Attributes {
+    type: string,
+    sql_dtype: string,
+    calculation: string,
+    default_value: string
+}
+
+interface Key {
+    name: string,
+    title: string,
+    description: string,
+    attributes: Attributes
+}
+
+interface Category {
+    category: string,
+    keys: Array<Key>
+}
+
+const categories = categories_json as Array<Category>;
 
 const useTreeItemStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -82,104 +105,100 @@ const useTreeItemStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-function StyledTreeItem(props: StyledTreeItemProps) {
+function StyledTreeItem(props: StyledTreeItemProps): JSX.Element {
     const classes = useTreeItemStyles();
     const {labelText, labelIcon: LabelIcon, labelInfo, color, bgColor, ...other} = props;
 
+    let treeItem = <TreeItem
+        label={
+            <div className={classes.labelRoot}>
+                <LabelIcon color="inherit" className={classes.labelIcon}/>
+                <Typography variant="body2" className={classes.labelText}>
+                    {labelText}
+                </Typography>
+                <Typography variant="caption" color="inherit">
+                    {labelInfo}
+                </Typography>
+            </div>
+        }
+        style={{
+            '--tree-view-color': color,
+            '--tree-view-bg-color': bgColor,
+        }}
+        classes={{
+            root: classes.root,
+            content: classes.content,
+            expanded: classes.expanded,
+            selected: classes.selected,
+            group: classes.group,
+            label: classes.label,
+        }}
+        {...other}
+    />
     return (
-        <TreeItem
-            label={
-                <div className={classes.labelRoot}>
-                    <LabelIcon color="inherit" className={classes.labelIcon}/>
-                    <Typography variant="body2" className={classes.labelText}>
-                        {labelText}
-                    </Typography>
-                    <Typography variant="caption" color="inherit">
-                        {labelInfo}
-                    </Typography>
-                </div>
-            }
-            style={{
-                '--tree-view-color': color,
-                '--tree-view-bg-color': bgColor,
-            }}
-            classes={{
-                root: classes.root,
-                content: classes.content,
-                expanded: classes.expanded,
-                selected: classes.selected,
-                group: classes.group,
-                label: classes.label,
-            }}
-            {...other}
-        />
+        treeItem
     );
 }
 
-const useStyles = makeStyles(
+const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
-            height: 264,
             flexGrow: 1,
-            maxWidth: 400,
+        },
+        paper: {
+            height: 140,
+            width: 100,
+        },
+        control: {
+            padding: theme.spacing(2),
         },
     }),
 );
 
-interface Attributes {
-    type: string,
-    sql_dtype: string,
-    calculation: string,
-    default_value: string
-}
-
-interface Key {
-    name: string,
-    title: string,
-    description: string,
-    attributes: Attributes
-}
-
-interface Category {
-    category: string,
-    keys: Array<Key>
-}
-
-const categories = categories_json as Array<Category>;
-
-function makeKeyItemId(cat: Category, key: Key) {
-    return cat.category + "." + key.name;
-}
-
-function keyItems(cat: Category) {
-    return cat.keys.map(key =>
-        <StyledTreeItem
-            nodeId={makeKeyItemId(cat, key)}
-            key={makeKeyItemId(cat, key)}
-            labelText={key.name}
-            labelIcon={ListAltIcon}/>
-    )
-}
-
-function nodeSelected(event: object, value: string) {
-    console.log("XXX Node selected: " + value)
-}
-
-function makeTreeView(classes: ClassNameMap<string>, catItems: JSX.Element[]) {
-    return <TreeView
-        className={classes.root}
-        // defaultExpanded={['3']}  // FIXME
-        defaultCollapseIcon={<ArrowDropDownIcon/>}
-        defaultExpandIcon={<ArrowRightIcon/>}
-        defaultEndIcon={<div style={{width: 24}}/>}
-        onNodeSelect={nodeSelected}
-    >
-        {catItems}
-    </TreeView>;
-}
 
 export default function App() {
+
+    const [selectedNode, setSelectedNode] = useState("");
     const classes = useStyles();
+
+    function makeKeyItemId(cat: Category, key: Key) {
+        return cat.category + "." + key.name;
+    }
+
+    function keyItems(cat: Category) {
+        return cat.keys.map(key =>
+            <StyledTreeItem
+                nodeId={makeKeyItemId(cat, key)}
+                key={makeKeyItemId(cat, key)}
+                labelText={key.name}
+                labelIcon={ListAltIcon}/>
+        )
+    }
+
+    function nodeSelected(event: object, value: string) {
+        console.log("XXX Node selected: " + value)
+        setSelectedNode(value)
+    }
+
+    function makeTreeView(classes: ClassNameMap, catItems: JSX.Element[]) {
+        return <TreeView
+            className={classes.root}
+            // defaultExpanded={['3']}  // FIXME
+            defaultCollapseIcon={<ArrowDropDownIcon/>}
+            defaultExpandIcon={<ArrowRightIcon/>}
+            defaultEndIcon={<div style={{width: 24}}/>}
+            onNodeSelect={nodeSelected}
+        >
+            {catItems}
+        </TreeView>;
+    }
+
+    function makeDetailView() {
+        console.log("XXX makeDetailView for " + selectedNode)
+        return <div>{selectedNode}</div>
+    }
+
+
     const catItems = categories.map(cat =>
         <StyledTreeItem
             key={cat.category}
@@ -191,6 +210,23 @@ export default function App() {
     );
 
     const treeView = makeTreeView(classes, catItems);
-    return treeView;
+    const detailView = makeDetailView();
+
+    const grid = <Grid container className={classes.root} spacing={2}>
+        <Grid item xs={12}>
+            <Grid container justify="flex-start" spacing={1}>
+                <Grid key="treeView" item>
+                    {treeView}
+                </Grid>
+                <Grid key="detailView" item>
+                    <Paper variant="outlined" className={classes.paper}>
+                        {detailView}
+                    </Paper>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+    return (grid);
 }
+
 
