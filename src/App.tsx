@@ -14,7 +14,7 @@ import {SvgIconProps} from '@material-ui/core/SvgIcon';
 import {ClassNameMap} from "@material-ui/core/styles/withStyles";
 
 import categories_json from './data/categories.json';
-import {Grid, Paper} from "@material-ui/core";
+import {Grid, Paper, ThemeProvider} from "@material-ui/core";
 import Toolbar from "@material-ui/core/Toolbar";
 import AppBar from "@material-ui/core/AppBar";
 import IconButton from "@material-ui/core/IconButton";
@@ -23,6 +23,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import UnfoldMoreIcon from '@material-ui/icons/UnfoldMore';
 import UnfoldLessIcon from '@material-ui/icons/UnfoldLess';
 import InputBase from "@material-ui/core/InputBase";
+import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 
 declare module 'csstype' {
     interface Properties {
@@ -61,6 +62,13 @@ const categoryNames = categories.map(c => c.category)
 
 // Separator between category and keyword for nodeId
 const sep = "|";
+
+const theme = createMuiTheme({
+    typography: {
+        // Tell Material-UI what's the font-size on the html element is.
+        htmlFontSize: 10,
+    },
+});
 
 const useTreeItemStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -218,10 +226,12 @@ const useStyles = makeStyles((theme: Theme) =>
             },
         },
         sectionMobile: {
-            display: 'flex',
-            [theme.breakpoints.up('md')]: {
+            display: 'flex', [theme.breakpoints.up('md')]: {
                 display: 'none',
             },
+        },
+        paragraph: {
+            fontSize: 14
         },
     }),
 );
@@ -330,10 +340,10 @@ export default function App() {
                     </Typography>
                     <div className={classes.sectionDesktop}>
                         <IconButton title="Expand All" color="inherit" onClick={() => setExpanded(categoryNames)}>
-                            <UnfoldMoreIcon />
+                            <UnfoldMoreIcon/>
                         </IconButton>
                         <IconButton title="Collapse All" color="inherit" onClick={() => setExpanded([])}>
-                            <UnfoldLessIcon />
+                            <UnfoldLessIcon/>
                         </IconButton>
                     </div>
                     <div className={classes.search}>
@@ -342,18 +352,17 @@ export default function App() {
                         </div>
                         <InputBase
                             placeholder=" Search Keywords…"
-                        classes={{
-                        root: classes.inputRoot,
-                        input: classes.inputInput,
-                    }}
-                         inputProps={{'aria-label': 'search'}}
-                    />
-                </div>
-                <div className={classes.grow}/>
-            </Toolbar>
-    </AppBar>
-    )
-        ;
+                            classes={{
+                                root: classes.inputRoot,
+                                input: classes.inputInput,
+                            }}
+                            inputProps={{'aria-label': 'search'}}
+                        />
+                    </div>
+                    <div className={classes.grow}/>
+                </Toolbar>
+            </AppBar>
+        );
     }
 
 
@@ -390,7 +399,9 @@ export default function App() {
                     <Paper
                         // variant="outlined"
                         className={classes.paper}>
-                        {detailView}
+                        <Typography component="p" className={classes.paragraph}>
+                            {detailView}
+                        </Typography>
                     </Paper>
                 </Grid>
             </Grid>
