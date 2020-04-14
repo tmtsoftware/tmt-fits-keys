@@ -24,6 +24,8 @@ import InputBase from "@material-ui/core/InputBase";
 
 import categories_json from './data/categories.json';
 import attributes_json from './data/attributes.json';
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 const attributesMap = new Map(Object.entries(attributes_json))
 
@@ -225,9 +227,12 @@ const useStyles = makeStyles((theme: Theme) =>
                 display: 'none',
             },
         },
-        detailView: {
+        paragraph: {
             fontSize: 14
         },
+        checkbox: {
+            color: 'inherit',
+        }
     }),
 );
 
@@ -238,6 +243,7 @@ export default function App() {
 
     const [expanded, setExpanded] = useState([""]);
     const [filter, setFilter] = useState("");
+    const [checked, setChecked] = React.useState(false);
 
     const classes = useStyles();
 
@@ -245,9 +251,17 @@ export default function App() {
         return cat.category + sep + key.name;
     }
 
+    const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setChecked(event.target.checked);
+    };
+
     // Filter the list of keys based on the contents of the search box
     function searchFilter(value: Key, index: number, array: Key[]) {
-        return filter == "" || value.name.startsWith(filter.toUpperCase())
+        const filt = filter === "" ? "" : filter.toUpperCase();
+        return (filt === "") || value.name.includes(filt) ||
+            (checked && (
+                value.title.toUpperCase().includes(filt) ||
+                value.description.toUpperCase().includes(filt)))
     }
 
     function keyItems(cat: Category) {
@@ -321,13 +335,13 @@ export default function App() {
                 }
             }
         }
-        return <div>Click on a keyword in the tree to show the details.</div>
+        return <div><p>Click on a keyword in the tree to show the details.</p></div>
     }
 
     function filterKeywords(event: ChangeEvent<HTMLInputElement>) {
         setFilter(event.target.value)
         // Expand tree if filter is set
-        if (event.target.value != "")
+        if (event.target.value !== "")
             setExpanded(categoryNames)
     }
 
@@ -368,6 +382,19 @@ export default function App() {
                             onChange={filterKeywords}
                         />
                     </div>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={checked}
+                                onChange={handleCheckboxChange}
+                                classes={{
+                                    root: classes.checkbox,
+                                }}
+                                inputProps={{'aria-label': 'primary checkbox'}}
+                            />
+                        }
+                        label="Search includes title and description"
+                    />
                     <div className={classes.grow}/>
                 </Toolbar>
             </AppBar>
@@ -408,7 +435,7 @@ export default function App() {
                     <Paper
                         // variant="outlined"
                         className={classes.paper}>
-                        <Typography component="p" className={classes.detailView}>
+                        <Typography component="div" className={classes.paragraph}>
                             {detailView}
                         </Typography>
                     </Paper>
