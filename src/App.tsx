@@ -12,8 +12,6 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import {SvgIconProps} from '@material-ui/core/SvgIcon';
 import {ClassNameMap} from "@material-ui/core/styles/withStyles";
-
-import categories_json from './data/categories.json';
 import {Grid, Paper, ThemeProvider} from "@material-ui/core";
 import Toolbar from "@material-ui/core/Toolbar";
 import AppBar from "@material-ui/core/AppBar";
@@ -24,6 +22,11 @@ import UnfoldMoreIcon from '@material-ui/icons/UnfoldMore';
 import UnfoldLessIcon from '@material-ui/icons/UnfoldLess';
 import InputBase from "@material-ui/core/InputBase";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
+
+import categories_json from './data/categories.json';
+import attributes_json from './data/attributes.json';
+
+const attributesMap = new Map(Object.entries(attributes_json))
 
 declare module 'csstype' {
     interface Properties {
@@ -284,7 +287,7 @@ export default function App() {
     function makeKeyRows(key: Key) {
         return key.attributes.map(attr =>
             <tr key={attr.name}>
-                <td key={attr.name}>
+                <td key={attr.name} title={attributesMap.get(attr.name)}>
                     {attr.name}
                 </td>
                 <td key={attr.value}>
