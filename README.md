@@ -12,7 +12,7 @@ To start the web app during development, make run:
 
     yarn start
 
-then go to the URL displayed in the output (http://$hostname:3000).
+which opens a browser window with the web app (http://$hostname:3000).
 
 You may need to install [nodejs](https://nodejs.org/en/) 
 and/or [yarn](https://classic.yarnpkg.com/en/) first: 
