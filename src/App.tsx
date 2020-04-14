@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {ChangeEvent, useState} from 'react';
 import './App.css';
 
 import {fade, makeStyles, Theme, createStyles} from '@material-ui/core/styles';
@@ -12,7 +12,7 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import {SvgIconProps} from '@material-ui/core/SvgIcon';
 import {ClassNameMap} from "@material-ui/core/styles/withStyles";
-import {Grid, Paper, ThemeProvider} from "@material-ui/core";
+import {Grid, Paper} from "@material-ui/core";
 import Toolbar from "@material-ui/core/Toolbar";
 import AppBar from "@material-ui/core/AppBar";
 import IconButton from "@material-ui/core/IconButton";
@@ -21,7 +21,6 @@ import SearchIcon from '@material-ui/icons/Search';
 import UnfoldMoreIcon from '@material-ui/icons/UnfoldMore';
 import UnfoldLessIcon from '@material-ui/icons/UnfoldLess';
 import InputBase from "@material-ui/core/InputBase";
-import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 
 import categories_json from './data/categories.json';
 import attributes_json from './data/attributes.json';
@@ -65,13 +64,6 @@ const categoryNames = categories.map(c => c.category)
 
 // Separator between category and keyword for nodeId
 const sep = "|";
-
-const theme = createMuiTheme({
-    typography: {
-        // Tell Material-UI what's the font-size on the html element is.
-        htmlFontSize: 10,
-    },
-});
 
 const useTreeItemStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -233,7 +225,7 @@ const useStyles = makeStyles((theme: Theme) =>
                 display: 'none',
             },
         },
-        paragraph: {
+        detailView: {
             fontSize: 14
         },
     }),
@@ -245,6 +237,7 @@ export default function App() {
     const [selectedNode, setSelectedNode] = useState("");
 
     const [expanded, setExpanded] = useState([""]);
+    const [filter, setFilter] = useState("");
 
     const classes = useStyles();
 
@@ -252,8 +245,13 @@ export default function App() {
         return cat.category + sep + key.name;
     }
 
+    // Filter the list of keys based on the contents of the search box
+    function searchFilter(value: Key, index: number, array: Key[]) {
+        return filter == "" || value.name.startsWith(filter.toUpperCase())
+    }
+
     function keyItems(cat: Category) {
-        return cat.keys.map(key =>
+        return cat.keys.filter(searchFilter).map(key =>
             <StyledTreeItem
                 nodeId={makeKeyItemId(cat, key)}
                 key={makeKeyItemId(cat, key)}
@@ -323,7 +321,14 @@ export default function App() {
                 }
             }
         }
-        return <div>Click on keyword in tree to show details.</div>
+        return <div>Click on a keyword in the tree to show the details.</div>
+    }
+
+    function filterKeywords(event: ChangeEvent<HTMLInputElement>) {
+        setFilter(event.target.value)
+        // Expand tree if filter is set
+        if (event.target.value != "")
+            setExpanded(categoryNames)
     }
 
     function makeAppBar() {
@@ -360,6 +365,7 @@ export default function App() {
                                 input: classes.inputInput,
                             }}
                             inputProps={{'aria-label': 'search'}}
+                            onChange={filterKeywords}
                         />
                     </div>
                     <div className={classes.grow}/>
@@ -402,7 +408,7 @@ export default function App() {
                     <Paper
                         // variant="outlined"
                         className={classes.paper}>
-                        <Typography component="p" className={classes.paragraph}>
+                        <Typography component="p" className={classes.detailView}>
                             {detailView}
                         </Typography>
                     </Paper>
