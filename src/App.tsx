@@ -20,6 +20,8 @@ import AppBar from "@material-ui/core/AppBar";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
+import UnfoldMoreIcon from '@material-ui/icons/UnfoldMore';
+import UnfoldLessIcon from '@material-ui/icons/UnfoldLess';
 import InputBase from "@material-ui/core/InputBase";
 
 declare module 'csstype' {
@@ -55,6 +57,7 @@ interface Category {
 }
 
 const categories = categories_json as Array<Category>;
+const categoryNames = categories.map(c => c.category)
 
 // Separator between category and keyword for nodeId
 const sep = "|";
@@ -115,7 +118,7 @@ function StyledTreeItem(props: StyledTreeItemProps): JSX.Element {
     const classes = useTreeItemStyles();
     const {labelText, labelIcon: LabelIcon, labelInfo, color, bgColor, ...other} = props;
 
-    let treeItem = <TreeItem
+    const treeItem = <TreeItem
         label={
             <div className={classes.labelRoot}>
                 <LabelIcon color="inherit" className={classes.labelIcon}/>
@@ -227,6 +230,9 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function App() {
 
     const [selectedNode, setSelectedNode] = useState("");
+
+    const [expanded, setExpanded] = useState([""]);
+
     const classes = useStyles();
 
     function makeKeyItemId(cat: Category, key: Key) {
@@ -247,6 +253,10 @@ export default function App() {
         setSelectedNode(value)
     }
 
+    function nodeToggled(event: object, nodeIds: Array<string>) {
+        setExpanded(nodeIds);
+    }
+
     function makeTreeView(classes: ClassNameMap, catItems: JSX.Element[]) {
         return <TreeView
             className={classes.root}
@@ -254,6 +264,8 @@ export default function App() {
             defaultExpandIcon={<ArrowRightIcon/>}
             defaultEndIcon={<div style={{width: 24}}/>}
             onNodeSelect={nodeSelected}
+            onNodeToggle={nodeToggled}
+            expanded={expanded}
         >
             {catItems}
         </TreeView>;
@@ -280,8 +292,8 @@ export default function App() {
                 const keyItem = cat.keys.find(k => k.name === key)
                 if (keyItem) {
                     return <div>
-                        <h1>{keyItem.name}</h1>
-                        <h2>{keyItem.title}</h2>
+                        <h2>{keyItem.name}</h2>
+                        <h3>{keyItem.title}</h3>
                         <p>{keyItem.description}</p>
                         <table>
                             <thead key={"thead"}>
@@ -314,25 +326,34 @@ export default function App() {
                         <MenuIcon/>
                     </IconButton>
                     <Typography className={classes.title} variant="h6" noWrap>
-                        TMT FITS Keyword Dictionary
+                        TMT Keyword Dictionary
                     </Typography>
+                    <div className={classes.sectionDesktop}>
+                        <IconButton title="Expand All" color="inherit" onClick={() => setExpanded(categoryNames)}>
+                            <UnfoldMoreIcon />
+                        </IconButton>
+                        <IconButton title="Collapse All" color="inherit" onClick={() => setExpanded([])}>
+                            <UnfoldLessIcon />
+                        </IconButton>
+                    </div>
                     <div className={classes.search}>
                         <div className={classes.searchIcon}>
                             <SearchIcon/>
                         </div>
                         <InputBase
-                            placeholder="Search…"
-                            classes={{
-                                root: classes.inputRoot,
-                                input: classes.inputInput,
-                            }}
-                            inputProps={{'aria-label': 'search'}}
-                        />
-                    </div>
-                    <div className={classes.grow}/>
-                </Toolbar>
-            </AppBar>
-        );
+                            placeholder=" Search Keywords…"
+                        classes={{
+                        root: classes.inputRoot,
+                        input: classes.inputInput,
+                    }}
+                         inputProps={{'aria-label': 'search'}}
+                    />
+                </div>
+                <div className={classes.grow}/>
+            </Toolbar>
+    </AppBar>
+    )
+        ;
     }
 
 
