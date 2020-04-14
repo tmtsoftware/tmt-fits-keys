@@ -27,9 +27,12 @@ import attributes_json from './data/attributes.json';
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 
+// Map of attribute to description for the FITS key attributes in data/attributes.json
+// used for tooltips in details table
 const attributesMap = new Map(Object.entries(attributes_json))
 
 declare module 'csstype' {
+    // noinspection JSUnusedGlobalSymbols
     interface Properties {
         '--tree-view-color'?: string;
         '--tree-view-bg-color'?: string;
@@ -44,11 +47,13 @@ type StyledTreeItemProps = TreeItemProps & {
     labelText: string;
 };
 
+// An attribute of a FITS key (displayed in details table)
 interface Attribute {
     name: string,
     value: string
 }
 
+// A FITS key
 interface Key {
     name: string,
     title: string,
@@ -56,6 +61,7 @@ interface Key {
     attributes: Array<Attribute>
 }
 
+// A category of FITS keys (from data/category.json)
 interface Category {
     category: string,
     keys: Array<Key>
@@ -236,17 +242,24 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-
+// Main App
 export default function App() {
 
+    // nodeId of the selected tree node
     const [selectedNode, setSelectedNode] = useState("");
 
+    // List of nodeIds for expanded tree nodes
     const [expanded, setExpanded] = useState([""]);
+
+    // Current contents of the Search filter box
     const [filter, setFilter] = useState("");
+
+    // Current state of the checkbox for the Search filter
     const [checked, setChecked] = React.useState(false);
 
     const classes = useStyles();
 
+    // Makes a nodeId for a tree node
     function makeKeyItemId(cat: Category, key: Key) {
         return cat.category + sep + key.name;
     }
@@ -256,6 +269,7 @@ export default function App() {
     };
 
     // Filter the list of keys based on the contents of the search box
+    // noinspection JSUnusedLocalSymbols
     function searchFilter(value: Key, index: number, array: Key[]) {
         const filt = filter === "" ? "" : filter.toUpperCase();
         return (filt === "") || value.name.includes(filt) ||
@@ -264,6 +278,7 @@ export default function App() {
                 value.description.toUpperCase().includes(filt)))
     }
 
+    // Makes the tree nodes for the FITS keys for the given category
     function keyItems(cat: Category) {
         return cat.keys.filter(searchFilter).map(key =>
             <StyledTreeItem
@@ -282,6 +297,7 @@ export default function App() {
         setExpanded(nodeIds);
     }
 
+    // Makes the tree displaying the categories of FITS keys
     function makeTreeView(classes: ClassNameMap, catItems: JSX.Element[]) {
         return <TreeView
             className={classes.root}
@@ -296,6 +312,7 @@ export default function App() {
         </TreeView>;
     }
 
+    // Makes the rows of the details table
     function makeKeyRows(key: Key) {
         return key.attributes.map(attr =>
             <tr key={attr.name}>
@@ -309,6 +326,7 @@ export default function App() {
         );
     }
 
+    // Makes the detailed view displayed when you select a tree node with a FITS key
     function makeDetailView() {
         const [category, key] = selectedNode.split(sep)
         if (key) {
@@ -338,6 +356,7 @@ export default function App() {
         return <div><p>Click on a keyword in the tree to show the details.</p></div>
     }
 
+    // Called when the user types in the Search field
     function filterKeywords(event: ChangeEvent<HTMLInputElement>) {
         setFilter(event.target.value)
         // Expand tree if filter is set
@@ -345,6 +364,7 @@ export default function App() {
             setExpanded(categoryNames)
     }
 
+    // Makes the top bar
     function makeAppBar() {
         return (
             <AppBar position="static">
@@ -401,7 +421,7 @@ export default function App() {
         );
     }
 
-
+    // Makes the tree nodes for the categories of FITS keys
     const catItems = categories.map(cat =>
         <StyledTreeItem
             key={cat.category}
@@ -415,6 +435,7 @@ export default function App() {
     const treeView = makeTreeView(classes, catItems);
     const detailView = makeDetailView();
 
+    // Do the layout in a grid
     const grid = <Grid container className={classes.root} spacing={6}>
         <Grid item xs={12}>
             <Grid container justify="flex-start" spacing={6}>
