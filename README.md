@@ -14,4 +14,12 @@ To start the web app during development, make run:
 
 then go to the URL displayed in the output (http://$hostname:3000).
 
-You may need to install yarn first: See https://classic.yarnpkg.com/en/docs/install/#mac-stable.
+You may need to install [nodejs](https://nodejs.org/en/) 
+and/or [yarn](https://classic.yarnpkg.com/en/) first: 
+See [here](https://classic.yarnpkg.com/en/docs/install/) for instructions on installing yarn.
+
+Here are the versions used during development:
+
+* yarn: 1.22.4
+* node: v12.16.2
+
