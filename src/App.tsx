@@ -1,7 +1,7 @@
 import React, {ChangeEvent, useState} from 'react';
 import './App.css';
 
-import {fade, makeStyles, Theme, createStyles} from '@material-ui/core/styles';
+import {createStyles, fade, makeStyles, Theme} from '@material-ui/core/styles';
 import TreeView from '@material-ui/lab/TreeView';
 import TreeItem, {TreeItemProps} from '@material-ui/lab/TreeItem';
 import Typography from '@material-ui/core/Typography';
@@ -22,10 +22,16 @@ import UnfoldMoreIcon from '@material-ui/icons/UnfoldMore';
 import UnfoldLessIcon from '@material-ui/icons/UnfoldLess';
 import InputBase from "@material-ui/core/InputBase";
 
-import categories_json from './data/categories.json';
-import attributes_json from './data/attributes.json';
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+
+import dictionary_json from './data/dictionary.json';
+import attributes_json from './data/attributes.json';
+
+import iris_json from './data/IRIS.json';
+import modhis_json from './data/MODHIS.json';
+import wfos_json from './data/WFOS.json';
+
 
 // Map of attribute to description for the FITS key attributes in data/attributes.json
 // used for tooltips in details table
@@ -61,17 +67,28 @@ interface Key {
     attributes: Array<Attribute>
 }
 
-// A category of FITS keys (from data/category.json)
-interface Category {
+// A dictionary of FITS keys (from data/category.json)
+interface Dictionary {
     category: string,
     keys: Array<Key>
 }
 
-const categories = categories_json as Array<Category>;
-const categoryNames = categories.map(c => c.category)
+// A reference to a key in a Dictionary
+interface KeyRef {
+    dict: Dictionary,
+    key: Key
+}
+
+const dictionaries = dictionary_json as Array<Dictionary>
+const categoryNames = dictionaries.map(d => d.category)
+
+// Arrays of references to keys for each instrument
+const irisIds = iris_json as Array<string>
+const modhisIds = modhis_json as Array<string>
+const wfosIds = wfos_json as Array<string>
 
 // Separator between category and keyword for nodeId
-const sep = "|";
+const sep = "|"
 
 const useTreeItemStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -124,6 +141,34 @@ const useTreeItemStyles = makeStyles((theme: Theme) =>
         },
     }),
 );
+
+// Gets the Key for the given id (in the format Category<sep>Key, same as nodeId)
+function getKeysForIds(ids: Array<string>): Array<KeyRef> {
+    const keys = ids.map(id => {
+        const [categoryName, keyName] = id.split(sep)
+        if (keyName) {
+            const dict = dictionaries.find(d => d.category === categoryName)
+            if (dict) {
+                const key = dict.keys.find(k => k.name === keyName)
+                if (key) {
+                    const keyRef: KeyRef = {dict: dict, key: key}
+                    return keyRef
+                }
+            }
+        }
+        return undefined
+    }).filter(keyRef => keyRef !== undefined)
+    return keys as Array<KeyRef>
+}
+
+// XXX TODO: Simplify/automate this?
+const instruments = new Map<string, Array<KeyRef>>()
+const instNames = ["IRIS", "MODHIS", "WFOS"]
+instruments.set("IRIS", getKeysForIds(irisIds))
+instruments.set("MODHIS", getKeysForIds(modhisIds))
+instruments.set("WFOS", getKeysForIds(wfosIds))
+
+const topLevelNodes = ["Dictionary"].concat(categoryNames).concat(instNames)
 
 function StyledTreeItem(props: StyledTreeItemProps): JSX.Element {
     const classes = useTreeItemStyles();
@@ -249,7 +294,7 @@ export default function App() {
     const [selectedNode, setSelectedNode] = useState("");
 
     // List of nodeIds for expanded tree nodes
-    const [expanded, setExpanded] = useState([""]);
+    const [expanded, setExpanded] = useState(["Dictionary"]);
 
     // Current contents of the Search filter box
     const [filter, setFilter] = useState("");
@@ -260,8 +305,8 @@ export default function App() {
     const classes = useStyles();
 
     // Makes a nodeId for a tree node
-    function makeKeyItemId(cat: Category, key: Key) {
-        return cat.category + sep + key.name;
+    function makeKeyItemId(dict: Dictionary, key: Key) {
+        return dict.category + sep + key.name;
     }
 
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -277,16 +322,34 @@ export default function App() {
                 value.title.toUpperCase().includes(filt) ||
                 value.description.toUpperCase().includes(filt)))
     }
+    function keyRefSearchFilter(value: KeyRef, index: number, array: KeyRef[]) {
+        return searchFilter(value.key, index, array.map(keyRef => keyRef.key))
+    }
 
     // Makes the tree nodes for the FITS keys for the given category
-    function keyItems(cat: Category) {
-        return cat.keys.filter(searchFilter).map(key =>
-            <StyledTreeItem
-                nodeId={makeKeyItemId(cat, key)}
-                key={makeKeyItemId(cat, key)}
+    function keyItems(dict: Dictionary) {
+        return dict.keys.filter(searchFilter).map(key => {
+            const id = makeKeyItemId(dict, key);
+            return <StyledTreeItem
+                nodeId={id}
+                key={id}
                 labelText={key.name}
                 labelIcon={ListAltIcon}/>
-        )
+        })
+    }
+
+    // Makes the tree nodes for the FITS keys for the given instrument
+    function instKeyItems(inst: string) {
+        const keyRefs = instruments.get(inst) as Array<KeyRef>
+        return keyRefs.filter(keyRefSearchFilter).map(keyRef => {
+            // Add inst to id to make it unique
+            const id = makeKeyItemId(keyRef.dict, keyRef.key) + sep + inst;
+            return <StyledTreeItem
+                nodeId={id}
+                key={id}
+                labelText={keyRef.key.name}
+                labelIcon={ListAltIcon}/>;
+        })
     }
 
     function nodeSelected(event: object, value: string) {
@@ -298,7 +361,7 @@ export default function App() {
     }
 
     // Makes the tree displaying the categories of FITS keys
-    function makeTreeView(classes: ClassNameMap, catItems: JSX.Element[]) {
+    function makeTreeView(classes: ClassNameMap, catItems: JSX.Element[], instItems: JSX.Element[]) {
         return <TreeView
             className={classes.root}
             defaultCollapseIcon={<ArrowDropDownIcon/>}
@@ -308,7 +371,13 @@ export default function App() {
             onNodeToggle={nodeToggled}
             expanded={expanded}
         >
-            {catItems}
+            <StyledTreeItem
+                key={"Dictionary"}
+                nodeId={"Dictionary"}
+                labelText={"Dictionary"}
+                labelIcon={FolderIcon}>
+                {catItems.concat(instItems)}
+            </StyledTreeItem>
         </TreeView>;
     }
 
@@ -330,7 +399,7 @@ export default function App() {
     function makeDetailView() {
         const [category, key] = selectedNode.split(sep)
         if (key) {
-            const cat = categories.find(c => c.category === category)
+            const cat = dictionaries.find(c => c.category === category)
             if (cat) {
                 const keyItem = cat.keys.find(k => k.name === key)
                 if (keyItem) {
@@ -361,7 +430,7 @@ export default function App() {
         setFilter(event.target.value)
         // Expand tree if filter is set
         if (event.target.value !== "")
-            setExpanded(categoryNames)
+            setExpanded(topLevelNodes)
     }
 
     // Makes the top bar
@@ -381,7 +450,7 @@ export default function App() {
                         TMT Keyword Dictionary
                     </Typography>
                     <div className={classes.sectionDesktop}>
-                        <IconButton title="Expand All" color="inherit" onClick={() => setExpanded(categoryNames)}>
+                        <IconButton title="Expand All" color="inherit" onClick={() => setExpanded(topLevelNodes)}>
                             <UnfoldMoreIcon/>
                         </IconButton>
                         <IconButton title="Collapse All" color="inherit" onClick={() => setExpanded([])}>
@@ -422,17 +491,28 @@ export default function App() {
     }
 
     // Makes the tree nodes for the categories of FITS keys
-    const catItems = categories.map(cat =>
+    const catItems = dictionaries.map(dict =>
         <StyledTreeItem
-            key={cat.category}
-            nodeId={cat.category}
-            labelText={cat.category}
+            key={dict.category}
+            nodeId={dict.category}
+            labelText={dict.category}
             labelIcon={FolderIcon}>
-            {keyItems(cat)}
+            {keyItems(dict)}
         </StyledTreeItem>
     );
 
-    const treeView = makeTreeView(classes, catItems);
+    // Makes the tree nodes for the instruments
+    const instItems = instNames.map( inst => {
+        return <StyledTreeItem
+            key={inst}
+            nodeId={inst}
+            labelText={inst}
+            labelIcon={FolderIcon}>
+            {instKeyItems(inst)}
+        </StyledTreeItem>;
+    });
+
+    const treeView = makeTreeView(classes, catItems, instItems);
     const detailView = makeDetailView();
 
     // Do the layout in a grid

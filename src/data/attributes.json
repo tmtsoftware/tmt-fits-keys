@@ -6,7 +6,7 @@
   "example": "A sample FITS keyword value",
   "units": "FITS keyword units (e.g., arcseconds, degrees), for documentation only",
   "sw_source": "Used by the code to retrieve values from database or services to fill the FITS keyword (e.g., PPS:miri_lrs_dither.pattern_type)",
-  "source": "Subsystem that provides the FITS keyword value, for documentation only",
+  "source": "Event field that provides the FITS keyword value in the format prefix@field. For example: tcs.pk.altaz@azimuth",
   "level": "Science data level (e.g., 1a, 1b, 2, 2b) where the FITS keyword is first added to the FITS header",
   "si": "Science Instrument to which the FITS keyword applies (e.g., FGS, MIRI, NIRCAM, NIRISS, NIRSPEC, Multiple)",
   "section": "Science Instrument to which the FITS keyword applies (e.g., FGS, MIRI, NIRCAM, NIRISS, NIRSPEC, Multiple)",
