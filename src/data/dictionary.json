@@ -9,7 +9,7 @@
             {
               "name": "SIMPLE",
               "title": "Data conform to FITS standard",
-              "description": "The SIMPLE keyword is required to be the first keyword in the primary header of all standard FITS files and is not permitted in extention headers. The value shall contain a logical constant with the value T if the file conforms to this standard.",
+              "description": "The <strong>SIMPLE</strong> keyword is required to be the first keyword in the primary header of all standard FITS files and is not permitted in extention headers. The value shall contain a logical constant with the value T if the file conforms to this standard.",
               "attributes": [
                 {
                   "name": "type",

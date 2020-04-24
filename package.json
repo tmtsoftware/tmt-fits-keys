@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "latest",
+    "@material-ui/icons": "latest",
+    "@material-ui/lab": "latest",
     "@testing-library/jest-dom": "latest",
     "@testing-library/react": "latest",
     "@testing-library/user-event": "latest",
@@ -12,11 +15,9 @@
     "@types/react-dom": "latest",
     "react": "latest",
     "react-dom": "latest",
+    "react-html-parser": "^2.0.2",
     "react-scripts": "latest",
-    "typescript": "latest",
-    "@material-ui/core": "latest",
-    "@material-ui/lab": "latest",
-    "@material-ui/icons": "latest"
+    "typescript": "latest"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -38,5 +39,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/react-html-parser": "^2.0.1"
   }
 }

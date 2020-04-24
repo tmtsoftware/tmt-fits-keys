@@ -21,6 +21,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import UnfoldMoreIcon from '@material-ui/icons/UnfoldMore';
 import UnfoldLessIcon from '@material-ui/icons/UnfoldLess';
 import InputBase from "@material-ui/core/InputBase";
+import ReactHtmlParser from 'react-html-parser';
 
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -542,7 +543,7 @@ export default function App() {
                         return <div>
                             <h2>{keyItem.name}</h2>
                             <h3>{keyItem.title}</h3>
-                            <p>{keyItem.description}</p>
+                            <p>{ReactHtmlParser(keyItem.description)}</p>
                             <table>
                                 <thead key={"thead"}>
                                 <tr>
