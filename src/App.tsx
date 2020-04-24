@@ -241,6 +241,7 @@ function StyledTreeItem(props: StyledTreeItemProps): JSX.Element {
             // include depth property to child element:
             // See issue with indenting child tree nodes correctly:
             // https://stackoverflow.com/questions/58810918/material-ui-treeview-from-lab-incorrectly-aligns-3rd-child-node
+            // noinspection TypeScriptRedundantGenericType
             return React.cloneElement(child as ReactElement<any>, {depth: depth + 1});
         })}
     </TreeItem>
@@ -359,6 +360,11 @@ export default function App() {
         return extension.name + sep + category.name + sep + key.name;
     }
 
+    // Makes a nodeId for a category tree node
+    function makeCategoryItemId(extension: Extension, category: Category) {
+        return extension.name + sep + category.name;
+    }
+
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setChecked(event.target.checked);
     };
@@ -389,17 +395,45 @@ export default function App() {
         })
     }
 
-    // Makes the tree nodes for the FITS keys for the given instrument
-    function instKeyItems(inst: string) {
-        const keyRefs = instruments.get(inst) as Array<KeyRef>
-        return keyRefs.filter(keyRefSearchFilter).map(keyRef => {
-            // Add inst to id to make it unique
-            const id = makeKeyItemId(keyRef.extension, keyRef.category, keyRef.key) + sep + inst;
+    function instKeyItems(inst: string, extension: Extension, category: Category, keyRefs: Array<KeyRef>): Array<JSX.Element> {
+        return keyRefs.map(keyRef => {
+            const keyId = makeKeyItemId(extension, category, keyRef.key) + sep + inst;
             return <StyledTreeItem
-                nodeId={id}
-                key={id}
+                nodeId={keyId}
+                key={keyId}
                 labelText={keyRef.key.name}
-                labelIcon={ListAltIcon}/>;
+                labelIcon={ListAltIcon}/>
+        })
+    }
+
+    function instCategoryItems(inst: string, extension: Extension, keyRefs: Array<KeyRef>): Array<JSX.Element> {
+        const categories = Array.from(new Set(keyRefs.map(k => k.category)))
+        return categories.map(category => {
+            const categoryId = makeCategoryItemId(extension, category) + sep + inst;
+            return <StyledTreeItem
+                nodeId={categoryId}
+                key={categoryId}
+                labelText={category.name}
+                labelIcon={FolderIcon}>
+                {instKeyItems(inst, extension, category,
+                    keyRefs.filter(k => k.extension === extension && k.category == category))}
+            </StyledTreeItem>
+        })
+    }
+
+    // Makes the tree nodes for the FITS keys for the given instrument
+    function instExtensionItems(inst: string): Array<JSX.Element> {
+        const keyRefs = (instruments.get(inst) as Array<KeyRef>).filter(keyRefSearchFilter)
+        const extensions = Array.from(new Set(keyRefs.map(k => k.extension)))
+        return extensions.map(extension => {
+            const extensionId = extension.name + sep + inst;
+            return <StyledTreeItem
+                nodeId={extensionId}
+                key={extensionId}
+                labelText={extension.name}
+                labelIcon={FolderIcon}>
+                {instCategoryItems(inst, extension, keyRefs.filter(k => k.extension === extension))}
+            </StyledTreeItem>
         })
     }
 
@@ -414,7 +448,7 @@ export default function App() {
     // Makes the tree nodes for the categories of FITS keys
     function makeCategoryItems(extension: Extension): Array<JSX.Element> {
         return extension.categories.map(category => {
-                const id = extension.name + sep + category.name
+                const id = makeCategoryItemId(extension, category)
                 return <StyledTreeItem
                     key={id}
                     nodeId={id}
@@ -445,7 +479,7 @@ export default function App() {
             nodeId={inst}
             labelText={inst}
             labelIcon={FolderIcon}>
-            {instKeyItems(inst)}
+            {instExtensionItems(inst)}
         </StyledTreeItem>;
     });
 
