@@ -1,296 +1,901 @@
-[
-  {
-    "category": "Standard Parameters",
-    "keys": [
-      {
-        "name": "SIMPLE",
-        "title": "Data conform to FITS standard",
-        "description": "The SIMPLE keyword is required to be the first keyword in the primary header of all standard FITS files and is not permitted in extention headers. The value shall contain a logical constant with the value T if the file conforms to this standard.",
-        "attributes": [
-          {
-            "name": "type",
-            "value": "boolean"
-          },
-          {
-            "name": "sql_dtype",
-            "value": "nchar(1)"
-          },
-          {
-            "name": "calculation",
-            "value": ""
-          },
-          {
-            "name": "default_value",
-            "value": "T"
-          },
-          {
-            "name": "example",
-            "value": "T"
-          },
-          {
-            "name": "units",
-            "value": ""
-          },
-          {
-            "name": "sw_source",
-            "value": "calculation"
-          },
-          {
-            "name": "source",
-            "value": ""
-          },
-          {
-            "name": "level",
-            "value": "1a"
-          },
-          {
-            "name": "si",
-            "value": "Multiple"
-          },
-          {
-            "name": "section",
-            "value": "Basic"
-          },
-          {
-            "name": "mode",
-            "value": "All"
-          },
-          {
-            "name": "fits_hdu",
-            "value": "PRIMARY"
-          },
-          {
-            "name": "special_processing",
-            "value": "undefined"
-          },
-          {
-            "name": "destination",
-            "value": "undefined"
-          },
-          {
-            "name": "enum",
-            "value": "undefined"
-          }
-        ]
-      },
-      {
-        "name": "BITPIX",
-        "title": "bits per data value",
-        "description": "The value field shall contain an integer that specifies the number of bits that represent a data value in the associated data array. BITPIX = 0 for the primary header. For an image extension, 16 is uncalibrated and -32 is calibrated. For group information captured in an ASCII table extension BITPIX = 8, denoting that the array contains ASCII characters.",
-        "attributes": [
-          {
-            "name": "type",
-            "value": "integer"
-          },
-          {
-            "name": "sql_dtype",
-            "value": "smallint"
-          },
-          {
-            "name": "calculation",
-            "value": ""
-          },
-          {
-            "name": "default_value",
-            "value": "0"
-          },
-          {
-            "name": "example",
-            "value": "0"
-          },
-          {
-            "name": "units",
-            "value": ""
-          },
-          {
-            "name": "sw_source",
-            "value": "calculation"
-          },
-          {
-            "name": "source",
-            "value": ""
-          },
-          {
-            "name": "level",
-            "value": "1a"
-          },
-          {
-            "name": "si",
-            "value": "Multiple"
-          },
-          {
-            "name": "section",
-            "value": "Basic"
-          },
-          {
-            "name": "mode",
-            "value": "All"
-          },
-          {
-            "name": "fits_hdu",
-            "value": "PRIMARY"
-          },
-          {
-            "name": "special_processing",
-            "value": "undefined"
-          },
-          {
-            "name": "destination",
-            "value": "undefined"
-          },
-          {
-            "name": "enum",
-            "value": "undefined"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "category": "Basic Parameters",
-    "keys": [
-      {
-        "name": "DATE",
-        "title": "[yyyy-mm-ddThh:mm:ss.ssssss] UTC date file created",
-        "description": "The UTC date and time when the HDU was created, in the form YYYY-MM-DDThh:mm:ss.ssssss, where YYYY shall be the four-digit calendar year number, MM the two-digit month number with January given by 01 and December by 12, and DD the two-digit day of the month. The literal T shall separate the date and time, hh shall be the two-digit hour in the day, mm the two-digit number of minutes after the hour, and ss.ssssss the number of seconds (two digits followed by a fraction accurate to microseconds) after the minute. Default values must not be given to any portion of the date/time string, and leading zeros must not be omitted.",
-        "attributes": [
-          {
-            "name": "type",
-            "value": "string"
-          },
-          {
-            "name": "sql_dtype",
-            "value": "datetime2"
-          },
-          {
-            "name": "calculation",
-            "value": "Operating system time in the format of YYYY-MM-DDThh:mm:ss.ssssss"
-          },
-          {
-            "name": "default_value",
-            "value": ""
-          },
-          {
-            "name": "example",
-            "value": "2015-01-01T00:00:00.000001"
-          },
-          {
-            "name": "units",
-            "value": ""
-          },
-          {
-            "name": "sw_source",
-            "value": ""
-          },
-          {
-            "name": "source",
-            "value": ""
-          },
-          {
-            "name": "level",
-            "value": "1a"
-          },
-          {
-            "name": "si",
-            "value": "Multiple"
-          },
-          {
-            "name": "section",
-            "value": "Basic"
-          },
-          {
-            "name": "mode",
-            "value": "All"
-          },
-          {
-            "name": "fits_hdu",
-            "value": "PRIMARY"
-          },
-          {
-            "name": "special_processing",
-            "value": "VALUE_REQUIRED"
-          },
-          {
-            "name": "destination",
-            "value": "ScienceCommon.date, GuideStar.date"
-          },
-          {
-            "name": "enum",
-            "value": "undefined"
-          }
-        ]
-      },
-      {
-        "name": "ORIGIN",
-        "title": "institution responsible for creating FITS file",
-        "description": "Identifies the organization or institution responsible for creating the FITS file.",
-        "attributes": [
-          {
-            "name": "type",
-            "value": "string"
-          },
-          {
-            "name": "sql_dtype",
-            "value": "nvarchar(20)"
-          },
-          {
-            "name": "calculation",
-            "value": ""
-          },
-          {
-            "name": "default_value",
-            "value": "STSCI"
-          },
-          {
-            "name": "example",
-            "value": "STSCI"
-          },
-          {
-            "name": "units",
-            "value": ""
-          },
-          {
-            "name": "sw_source",
-            "value": ""
-          },
-          {
-            "name": "source",
-            "value": ""
-          },
-          {
-            "name": "level",
-            "value": "1a"
-          },
-          {
-            "name": "si",
-            "value": "Multiple"
-          },
-          {
-            "name": "section",
-            "value": "Basic"
-          },
-          {
-            "name": "mode",
-            "value": "All"
-          },
-          {
-            "name": "fits_hdu",
-            "value": "PRIMARY"
-          },
-          {
-            "name": "special_processing",
-            "value": "undefined"
-          },
-          {
-            "name": "destination",
-            "value": "ScienceCommon.origin, GuideStar.origin"
-          },
-          {
-            "name": "enum",
-            "value": "undefined"
-          }
-        ]
-      }
-    ]
-  }
-]
+{
+  "extensions": [
+    {
+      "name": "Primary Header",
+      "categories": [
+        {
+          "name": "Standard Keywords",
+          "keys": [
+            {
+              "name": "SIMPLE",
+              "title": "Data conform to FITS standard",
+              "description": "The SIMPLE keyword is required to be the first keyword in the primary header of all standard FITS files and is not permitted in extention headers. The value shall contain a logical constant with the value T if the file conforms to this standard.",
+              "attributes": [
+                {
+                  "name": "type",
+                  "value": "boolean"
+                },
+                {
+                  "name": "sql_dtype",
+                  "value": "nchar(1)"
+                },
+                {
+                  "name": "calculation",
+                  "value": ""
+                },
+                {
+                  "name": "default_value",
+                  "value": "T"
+                },
+                {
+                  "name": "example",
+                  "value": "T"
+                },
+                {
+                  "name": "units",
+                  "value": ""
+                },
+                {
+                  "name": "sw_source",
+                  "value": "calculation"
+                },
+                {
+                  "name": "source",
+                  "value": ""
+                },
+                {
+                  "name": "level",
+                  "value": "1a"
+                },
+                {
+                  "name": "si",
+                  "value": "Multiple"
+                },
+                {
+                  "name": "section",
+                  "value": "Basic"
+                },
+                {
+                  "name": "mode",
+                  "value": "All"
+                },
+                {
+                  "name": "fits_hdu",
+                  "value": "PRIMARY"
+                },
+                {
+                  "name": "special_processing",
+                  "value": "undefined"
+                },
+                {
+                  "name": "destination",
+                  "value": "undefined"
+                },
+                {
+                  "name": "enum",
+                  "value": "undefined"
+                }
+              ]
+            },
+            {
+              "name": "BITPIX",
+              "title": "bits per data value",
+              "description": "The value field shall contain an integer that specifies the number of bits that represent a data value in the associated data array. BITPIX = 0 for the primary header. For an image extension, 16 is uncalibrated and -32 is calibrated. For group information captured in an ASCII table extension BITPIX = 8, denoting that the array contains ASCII characters.",
+              "attributes": [
+                {
+                  "name": "type",
+                  "value": "integer"
+                },
+                {
+                  "name": "sql_dtype",
+                  "value": "smallint"
+                },
+                {
+                  "name": "calculation",
+                  "value": ""
+                },
+                {
+                  "name": "default_value",
+                  "value": "0"
+                },
+                {
+                  "name": "example",
+                  "value": "0"
+                },
+                {
+                  "name": "units",
+                  "value": ""
+                },
+                {
+                  "name": "sw_source",
+                  "value": "calculation"
+                },
+                {
+                  "name": "source",
+                  "value": ""
+                },
+                {
+                  "name": "level",
+                  "value": "1a"
+                },
+                {
+                  "name": "si",
+                  "value": "Multiple"
+                },
+                {
+                  "name": "section",
+                  "value": "Basic"
+                },
+                {
+                  "name": "mode",
+                  "value": "All"
+                },
+                {
+                  "name": "fits_hdu",
+                  "value": "PRIMARY"
+                },
+                {
+                  "name": "special_processing",
+                  "value": "undefined"
+                },
+                {
+                  "name": "destination",
+                  "value": "undefined"
+                },
+                {
+                  "name": "enum",
+                  "value": "undefined"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Basic Keywords",
+          "keys": [
+            {
+              "name": "DATE",
+              "title": "[yyyy-mm-ddThh:mm:ss.ssssss] UTC date file created",
+              "description": "The UTC date and time when the HDU was created, in the form YYYY-MM-DDThh:mm:ss.ssssss, where YYYY shall be the four-digit calendar year number, MM the two-digit month number with January given by 01 and December by 12, and DD the two-digit day of the month. The literal T shall separate the date and time, hh shall be the two-digit hour in the day, mm the two-digit number of minutes after the hour, and ss.ssssss the number of seconds (two digits followed by a fraction accurate to microseconds) after the minute. Default values must not be given to any portion of the date/time string, and leading zeros must not be omitted.",
+              "attributes": [
+                {
+                  "name": "type",
+                  "value": "string"
+                },
+                {
+                  "name": "sql_dtype",
+                  "value": "datetime2"
+                },
+                {
+                  "name": "calculation",
+                  "value": "Operating system time in the format of YYYY-MM-DDThh:mm:ss.ssssss"
+                },
+                {
+                  "name": "default_value",
+                  "value": ""
+                },
+                {
+                  "name": "example",
+                  "value": "2015-01-01T00:00:00.000001"
+                },
+                {
+                  "name": "units",
+                  "value": ""
+                },
+                {
+                  "name": "sw_source",
+                  "value": ""
+                },
+                {
+                  "name": "source",
+                  "value": ""
+                },
+                {
+                  "name": "level",
+                  "value": "1a"
+                },
+                {
+                  "name": "si",
+                  "value": "Multiple"
+                },
+                {
+                  "name": "section",
+                  "value": "Basic"
+                },
+                {
+                  "name": "mode",
+                  "value": "All"
+                },
+                {
+                  "name": "fits_hdu",
+                  "value": "PRIMARY"
+                },
+                {
+                  "name": "special_processing",
+                  "value": "VALUE_REQUIRED"
+                },
+                {
+                  "name": "destination",
+                  "value": "ScienceCommon.date, GuideStar.date"
+                },
+                {
+                  "name": "enum",
+                  "value": "undefined"
+                }
+              ]
+            },
+            {
+              "name": "ORIGIN",
+              "title": "institution responsible for creating FITS file",
+              "description": "Identifies the organization or institution responsible for creating the FITS file.",
+              "attributes": [
+                {
+                  "name": "type",
+                  "value": "string"
+                },
+                {
+                  "name": "sql_dtype",
+                  "value": "nvarchar(20)"
+                },
+                {
+                  "name": "calculation",
+                  "value": ""
+                },
+                {
+                  "name": "default_value",
+                  "value": "STSCI"
+                },
+                {
+                  "name": "example",
+                  "value": "STSCI"
+                },
+                {
+                  "name": "units",
+                  "value": ""
+                },
+                {
+                  "name": "sw_source",
+                  "value": ""
+                },
+                {
+                  "name": "source",
+                  "value": ""
+                },
+                {
+                  "name": "level",
+                  "value": "1a"
+                },
+                {
+                  "name": "si",
+                  "value": "Multiple"
+                },
+                {
+                  "name": "section",
+                  "value": "Basic"
+                },
+                {
+                  "name": "mode",
+                  "value": "All"
+                },
+                {
+                  "name": "fits_hdu",
+                  "value": "PRIMARY"
+                },
+                {
+                  "name": "special_processing",
+                  "value": "undefined"
+                },
+                {
+                  "name": "destination",
+                  "value": "ScienceCommon.origin, GuideStar.origin"
+                },
+                {
+                  "name": "enum",
+                  "value": "undefined"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Data Quality Extension",
+      "categories": [
+        {
+          "name": "Standard Keywords",
+          "keys": [
+            {
+              "name": "SIMPLE",
+              "title": "Data conform to FITS standard",
+              "description": "The SIMPLE keyword is required to be the first keyword in the primary header of all standard FITS files and is not permitted in extention headers. The value shall contain a logical constant with the value T if the file conforms to this standard.",
+              "attributes": [
+                {
+                  "name": "type",
+                  "value": "boolean"
+                },
+                {
+                  "name": "sql_dtype",
+                  "value": "nchar(1)"
+                },
+                {
+                  "name": "calculation",
+                  "value": ""
+                },
+                {
+                  "name": "default_value",
+                  "value": "T"
+                },
+                {
+                  "name": "example",
+                  "value": "T"
+                },
+                {
+                  "name": "units",
+                  "value": ""
+                },
+                {
+                  "name": "sw_source",
+                  "value": "calculation"
+                },
+                {
+                  "name": "source",
+                  "value": ""
+                },
+                {
+                  "name": "level",
+                  "value": "1a"
+                },
+                {
+                  "name": "si",
+                  "value": "Multiple"
+                },
+                {
+                  "name": "section",
+                  "value": "Basic"
+                },
+                {
+                  "name": "mode",
+                  "value": "All"
+                },
+                {
+                  "name": "fits_hdu",
+                  "value": "PRIMARY"
+                },
+                {
+                  "name": "special_processing",
+                  "value": "undefined"
+                },
+                {
+                  "name": "destination",
+                  "value": "undefined"
+                },
+                {
+                  "name": "enum",
+                  "value": "undefined"
+                }
+              ]
+            },
+            {
+              "name": "BITPIX",
+              "title": "bits per data value",
+              "description": "The value field shall contain an integer that specifies the number of bits that represent a data value in the associated data array. BITPIX = 0 for the primary header. For an image extension, 16 is uncalibrated and -32 is calibrated. For group information captured in an ASCII table extension BITPIX = 8, denoting that the array contains ASCII characters.",
+              "attributes": [
+                {
+                  "name": "type",
+                  "value": "integer"
+                },
+                {
+                  "name": "sql_dtype",
+                  "value": "smallint"
+                },
+                {
+                  "name": "calculation",
+                  "value": ""
+                },
+                {
+                  "name": "default_value",
+                  "value": "0"
+                },
+                {
+                  "name": "example",
+                  "value": "0"
+                },
+                {
+                  "name": "units",
+                  "value": ""
+                },
+                {
+                  "name": "sw_source",
+                  "value": "calculation"
+                },
+                {
+                  "name": "source",
+                  "value": ""
+                },
+                {
+                  "name": "level",
+                  "value": "1a"
+                },
+                {
+                  "name": "si",
+                  "value": "Multiple"
+                },
+                {
+                  "name": "section",
+                  "value": "Basic"
+                },
+                {
+                  "name": "mode",
+                  "value": "All"
+                },
+                {
+                  "name": "fits_hdu",
+                  "value": "PRIMARY"
+                },
+                {
+                  "name": "special_processing",
+                  "value": "undefined"
+                },
+                {
+                  "name": "destination",
+                  "value": "undefined"
+                },
+                {
+                  "name": "enum",
+                  "value": "undefined"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Basic Keywords",
+          "keys": [
+            {
+              "name": "DATE",
+              "title": "[yyyy-mm-ddThh:mm:ss.ssssss] UTC date file created",
+              "description": "The UTC date and time when the HDU was created, in the form YYYY-MM-DDThh:mm:ss.ssssss, where YYYY shall be the four-digit calendar year number, MM the two-digit month number with January given by 01 and December by 12, and DD the two-digit day of the month. The literal T shall separate the date and time, hh shall be the two-digit hour in the day, mm the two-digit number of minutes after the hour, and ss.ssssss the number of seconds (two digits followed by a fraction accurate to microseconds) after the minute. Default values must not be given to any portion of the date/time string, and leading zeros must not be omitted.",
+              "attributes": [
+                {
+                  "name": "type",
+                  "value": "string"
+                },
+                {
+                  "name": "sql_dtype",
+                  "value": "datetime2"
+                },
+                {
+                  "name": "calculation",
+                  "value": "Operating system time in the format of YYYY-MM-DDThh:mm:ss.ssssss"
+                },
+                {
+                  "name": "default_value",
+                  "value": ""
+                },
+                {
+                  "name": "example",
+                  "value": "2015-01-01T00:00:00.000001"
+                },
+                {
+                  "name": "units",
+                  "value": ""
+                },
+                {
+                  "name": "sw_source",
+                  "value": ""
+                },
+                {
+                  "name": "source",
+                  "value": ""
+                },
+                {
+                  "name": "level",
+                  "value": "1a"
+                },
+                {
+                  "name": "si",
+                  "value": "Multiple"
+                },
+                {
+                  "name": "section",
+                  "value": "Basic"
+                },
+                {
+                  "name": "mode",
+                  "value": "All"
+                },
+                {
+                  "name": "fits_hdu",
+                  "value": "PRIMARY"
+                },
+                {
+                  "name": "special_processing",
+                  "value": "VALUE_REQUIRED"
+                },
+                {
+                  "name": "destination",
+                  "value": "ScienceCommon.date, GuideStar.date"
+                },
+                {
+                  "name": "enum",
+                  "value": "undefined"
+                }
+              ]
+            },
+            {
+              "name": "ORIGIN",
+              "title": "institution responsible for creating FITS file",
+              "description": "Identifies the organization or institution responsible for creating the FITS file.",
+              "attributes": [
+                {
+                  "name": "type",
+                  "value": "string"
+                },
+                {
+                  "name": "sql_dtype",
+                  "value": "nvarchar(20)"
+                },
+                {
+                  "name": "calculation",
+                  "value": ""
+                },
+                {
+                  "name": "default_value",
+                  "value": "STSCI"
+                },
+                {
+                  "name": "example",
+                  "value": "STSCI"
+                },
+                {
+                  "name": "units",
+                  "value": ""
+                },
+                {
+                  "name": "sw_source",
+                  "value": ""
+                },
+                {
+                  "name": "source",
+                  "value": ""
+                },
+                {
+                  "name": "level",
+                  "value": "1a"
+                },
+                {
+                  "name": "si",
+                  "value": "Multiple"
+                },
+                {
+                  "name": "section",
+                  "value": "Basic"
+                },
+                {
+                  "name": "mode",
+                  "value": "All"
+                },
+                {
+                  "name": "fits_hdu",
+                  "value": "PRIMARY"
+                },
+                {
+                  "name": "special_processing",
+                  "value": "undefined"
+                },
+                {
+                  "name": "destination",
+                  "value": "ScienceCommon.origin, GuideStar.origin"
+                },
+                {
+                  "name": "enum",
+                  "value": "undefined"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Error Extension",
+      "categories": [
+        {
+          "name": "Standard Keywords",
+          "keys": [
+            {
+              "name": "SIMPLE",
+              "title": "Data conform to FITS standard",
+              "description": "The SIMPLE keyword is required to be the first keyword in the primary header of all standard FITS files and is not permitted in extention headers. The value shall contain a logical constant with the value T if the file conforms to this standard.",
+              "attributes": [
+                {
+                  "name": "type",
+                  "value": "boolean"
+                },
+                {
+                  "name": "sql_dtype",
+                  "value": "nchar(1)"
+                },
+                {
+                  "name": "calculation",
+                  "value": ""
+                },
+                {
+                  "name": "default_value",
+                  "value": "T"
+                },
+                {
+                  "name": "example",
+                  "value": "T"
+                },
+                {
+                  "name": "units",
+                  "value": ""
+                },
+                {
+                  "name": "sw_source",
+                  "value": "calculation"
+                },
+                {
+                  "name": "source",
+                  "value": ""
+                },
+                {
+                  "name": "level",
+                  "value": "1a"
+                },
+                {
+                  "name": "si",
+                  "value": "Multiple"
+                },
+                {
+                  "name": "section",
+                  "value": "Basic"
+                },
+                {
+                  "name": "mode",
+                  "value": "All"
+                },
+                {
+                  "name": "fits_hdu",
+                  "value": "PRIMARY"
+                },
+                {
+                  "name": "special_processing",
+                  "value": "undefined"
+                },
+                {
+                  "name": "destination",
+                  "value": "undefined"
+                },
+                {
+                  "name": "enum",
+                  "value": "undefined"
+                }
+              ]
+            },
+            {
+              "name": "BITPIX",
+              "title": "bits per data value",
+              "description": "The value field shall contain an integer that specifies the number of bits that represent a data value in the associated data array. BITPIX = 0 for the primary header. For an image extension, 16 is uncalibrated and -32 is calibrated. For group information captured in an ASCII table extension BITPIX = 8, denoting that the array contains ASCII characters.",
+              "attributes": [
+                {
+                  "name": "type",
+                  "value": "integer"
+                },
+                {
+                  "name": "sql_dtype",
+                  "value": "smallint"
+                },
+                {
+                  "name": "calculation",
+                  "value": ""
+                },
+                {
+                  "name": "default_value",
+                  "value": "0"
+                },
+                {
+                  "name": "example",
+                  "value": "0"
+                },
+                {
+                  "name": "units",
+                  "value": ""
+                },
+                {
+                  "name": "sw_source",
+                  "value": "calculation"
+                },
+                {
+                  "name": "source",
+                  "value": ""
+                },
+                {
+                  "name": "level",
+                  "value": "1a"
+                },
+                {
+                  "name": "si",
+                  "value": "Multiple"
+                },
+                {
+                  "name": "section",
+                  "value": "Basic"
+                },
+                {
+                  "name": "mode",
+                  "value": "All"
+                },
+                {
+                  "name": "fits_hdu",
+                  "value": "PRIMARY"
+                },
+                {
+                  "name": "special_processing",
+                  "value": "undefined"
+                },
+                {
+                  "name": "destination",
+                  "value": "undefined"
+                },
+                {
+                  "name": "enum",
+                  "value": "undefined"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Basic Keywords",
+          "keys": [
+            {
+              "name": "DATE",
+              "title": "[yyyy-mm-ddThh:mm:ss.ssssss] UTC date file created",
+              "description": "The UTC date and time when the HDU was created, in the form YYYY-MM-DDThh:mm:ss.ssssss, where YYYY shall be the four-digit calendar year number, MM the two-digit month number with January given by 01 and December by 12, and DD the two-digit day of the month. The literal T shall separate the date and time, hh shall be the two-digit hour in the day, mm the two-digit number of minutes after the hour, and ss.ssssss the number of seconds (two digits followed by a fraction accurate to microseconds) after the minute. Default values must not be given to any portion of the date/time string, and leading zeros must not be omitted.",
+              "attributes": [
+                {
+                  "name": "type",
+                  "value": "string"
+                },
+                {
+                  "name": "sql_dtype",
+                  "value": "datetime2"
+                },
+                {
+                  "name": "calculation",
+                  "value": "Operating system time in the format of YYYY-MM-DDThh:mm:ss.ssssss"
+                },
+                {
+                  "name": "default_value",
+                  "value": ""
+                },
+                {
+                  "name": "example",
+                  "value": "2015-01-01T00:00:00.000001"
+                },
+                {
+                  "name": "units",
+                  "value": ""
+                },
+                {
+                  "name": "sw_source",
+                  "value": ""
+                },
+                {
+                  "name": "source",
+                  "value": ""
+                },
+                {
+                  "name": "level",
+                  "value": "1a"
+                },
+                {
+                  "name": "si",
+                  "value": "Multiple"
+                },
+                {
+                  "name": "section",
+                  "value": "Basic"
+                },
+                {
+                  "name": "mode",
+                  "value": "All"
+                },
+                {
+                  "name": "fits_hdu",
+                  "value": "PRIMARY"
+                },
+                {
+                  "name": "special_processing",
+                  "value": "VALUE_REQUIRED"
+                },
+                {
+                  "name": "destination",
+                  "value": "ScienceCommon.date, GuideStar.date"
+                },
+                {
+                  "name": "enum",
+                  "value": "undefined"
+                }
+              ]
+            },
+            {
+              "name": "ORIGIN",
+              "title": "institution responsible for creating FITS file",
+              "description": "Identifies the organization or institution responsible for creating the FITS file.",
+              "attributes": [
+                {
+                  "name": "type",
+                  "value": "string"
+                },
+                {
+                  "name": "sql_dtype",
+                  "value": "nvarchar(20)"
+                },
+                {
+                  "name": "calculation",
+                  "value": ""
+                },
+                {
+                  "name": "default_value",
+                  "value": "STSCI"
+                },
+                {
+                  "name": "example",
+                  "value": "STSCI"
+                },
+                {
+                  "name": "units",
+                  "value": ""
+                },
+                {
+                  "name": "sw_source",
+                  "value": ""
+                },
+                {
+                  "name": "source",
+                  "value": ""
+                },
+                {
+                  "name": "level",
+                  "value": "1a"
+                },
+                {
+                  "name": "si",
+                  "value": "Multiple"
+                },
+                {
+                  "name": "section",
+                  "value": "Basic"
+                },
+                {
+                  "name": "mode",
+                  "value": "All"
+                },
+                {
+                  "name": "fits_hdu",
+                  "value": "PRIMARY"
+                },
+                {
+                  "name": "special_processing",
+                  "value": "undefined"
+                },
+                {
+                  "name": "destination",
+                  "value": "ScienceCommon.origin, GuideStar.origin"
+                },
+                {
+                  "name": "enum",
+                  "value": "undefined"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

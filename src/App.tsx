@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent, ReactElement, useState} from 'react';
 import './App.css';
 
 import {createStyles, fade, makeStyles, Theme} from '@material-ui/core/styles';
@@ -42,6 +42,7 @@ declare module 'csstype' {
     interface Properties {
         '--tree-view-color'?: string;
         '--tree-view-bg-color'?: string;
+        '--node-depth'?: number;
     }
 }
 
@@ -51,15 +52,16 @@ type StyledTreeItemProps = TreeItemProps & {
     labelIcon: React.ElementType<SvgIconProps>;
     labelInfo?: string;
     labelText: string;
+    depth?: number;
 };
 
-// An attribute of a FITS key (displayed in details table)
+// An attribute of a FITS keyword (displayed in details table)
 interface Attribute {
     name: string,
     value: string
 }
 
-// A FITS key
+// A FITS keyword
 interface Key {
     name: string,
     title: string,
@@ -67,28 +69,43 @@ interface Key {
     attributes: Array<Attribute>
 }
 
-// A dictionary of FITS keys (from data/category.json)
-interface Dictionary {
-    category: string,
+// A category of FITS keywords
+interface Category {
+    name: string,
     keys: Array<Key>
+}
+
+// Top level extension containing a number of different categories of FITS keywords
+interface Extension {
+    name: string,
+    categories: Array<Category>
+}
+
+// Top level dictionary object containing a number of extensions
+interface KeywordDictionary {
+    extensions: Array<Extension>
 }
 
 // A reference to a key in a Dictionary
 interface KeyRef {
-    dict: Dictionary,
+    extension: Extension,
+    category: Category,
     key: Key
 }
 
-const dictionaries = dictionary_json as Array<Dictionary>
-const categoryNames = dictionaries.map(d => d.category)
+const keywordDictionary = dictionary_json as KeywordDictionary
+const extensions = keywordDictionary.extensions
+const extensionNames = extensions.map(d => d.name)
 
 // Arrays of references to keys for each instrument
 const irisIds = iris_json as Array<string>
 const modhisIds = modhis_json as Array<string>
 const wfosIds = wfos_json as Array<string>
 
-// Separator between category and keyword for nodeId
+// Separator between extension, category and keyword name for nodeId
 const sep = "|"
+
+const rootNodeLabel = "Keyword Dictionary"
 
 const useTreeItemStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -139,20 +156,29 @@ const useTreeItemStyles = makeStyles((theme: Theme) =>
             fontWeight: 'inherit',
             flexGrow: 1,
         },
+        parentNode: {
+            "& ul li $content": {
+                // child left padding
+                paddingLeft: `calc(var(--node-depth) * ${theme.spacing(2)}px)`
+            }
+        }
     }),
 );
 
 // Gets the Key for the given id (in the format Category<sep>Key, same as nodeId)
 function getKeysForIds(ids: Array<string>): Array<KeyRef> {
     const keys = ids.map(id => {
-        const [categoryName, keyName] = id.split(sep)
+        const [extensionName, categoryName, keyName] = id.split(sep)
         if (keyName) {
-            const dict = dictionaries.find(d => d.category === categoryName)
-            if (dict) {
-                const key = dict.keys.find(k => k.name === keyName)
-                if (key) {
-                    const keyRef: KeyRef = {dict: dict, key: key}
-                    return keyRef
+            const extension = extensions.find(d => d.name === extensionName)
+            if (extension) {
+                const category = extension.categories.find(c => c.name === categoryName)
+                if (category) {
+                    const key = category.keys.find(k => k.name === keyName)
+                    if (key) {
+                        const keyRef: KeyRef = {extension: extension, category: category, key: key}
+                        return keyRef
+                    }
                 }
             }
         }
@@ -168,13 +194,23 @@ instruments.set("IRIS", getKeysForIds(irisIds))
 instruments.set("MODHIS", getKeysForIds(modhisIds))
 instruments.set("WFOS", getKeysForIds(wfosIds))
 
-const topLevelNodes = ["Dictionary"].concat(categoryNames).concat(instNames)
+const topLevelNodes = [rootNodeLabel].concat(extensionNames).concat(instNames)
 
 function StyledTreeItem(props: StyledTreeItemProps): JSX.Element {
     const classes = useTreeItemStyles();
-    const {labelText, labelIcon: LabelIcon, labelInfo, color, bgColor, ...other} = props;
+    const {
+        children,
+        labelText,
+        depth = 0,
+        labelIcon: LabelIcon,
+        labelInfo,
+        color,
+        bgColor,
+        ...other
+    } = props;
 
     const treeItem = <TreeItem
+        className={props.children ? classes.parentNode : undefined}
         label={
             <div className={classes.labelRoot}>
                 <LabelIcon color="inherit" className={classes.labelIcon}/>
@@ -189,6 +225,7 @@ function StyledTreeItem(props: StyledTreeItemProps): JSX.Element {
         style={{
             '--tree-view-color': color,
             '--tree-view-bg-color': bgColor,
+            "--node-depth": depth
         }}
         classes={{
             root: classes.root,
@@ -199,7 +236,12 @@ function StyledTreeItem(props: StyledTreeItemProps): JSX.Element {
             label: classes.label,
         }}
         {...other}
-    />
+    >
+        {React.Children.map(children, child => {
+            // includ depth property to child element
+            return React.cloneElement(child as ReactElement<any>, {depth: depth + 1});
+        })}
+    </TreeItem>
     return (
         treeItem
     );
@@ -283,6 +325,12 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         checkbox: {
             color: 'inherit',
+        },
+        parentNode: {
+            "& ul li $content": {
+                // child left padding
+                paddingLeft: `calc(var(--node-depth) * ${theme.spacing(2)}px)`
+            }
         }
     }),
 );
@@ -294,7 +342,7 @@ export default function App() {
     const [selectedNode, setSelectedNode] = useState("");
 
     // List of nodeIds for expanded tree nodes
-    const [expanded, setExpanded] = useState(["Dictionary"]);
+    const [expanded, setExpanded] = useState([rootNodeLabel]);
 
     // Current contents of the Search filter box
     const [filter, setFilter] = useState("");
@@ -304,9 +352,9 @@ export default function App() {
 
     const classes = useStyles();
 
-    // Makes a nodeId for a tree node
-    function makeKeyItemId(dict: Dictionary, key: Key) {
-        return dict.category + sep + key.name;
+    // Makes a nodeId for a key tree node
+    function makeKeyItemId(extension: Extension, category: Category, key: Key) {
+        return extension.name + sep + category.name + sep + key.name;
     }
 
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -322,14 +370,15 @@ export default function App() {
                 value.title.toUpperCase().includes(filt) ||
                 value.description.toUpperCase().includes(filt)))
     }
+
     function keyRefSearchFilter(value: KeyRef, index: number, array: KeyRef[]) {
         return searchFilter(value.key, index, array.map(keyRef => keyRef.key))
     }
 
     // Makes the tree nodes for the FITS keys for the given category
-    function keyItems(dict: Dictionary) {
-        return dict.keys.filter(searchFilter).map(key => {
-            const id = makeKeyItemId(dict, key);
+    function keyItems(extension: Extension, category: Category): Array<JSX.Element> {
+        return category.keys.filter(searchFilter).map(key => {
+            const id = makeKeyItemId(extension, category, key);
             return <StyledTreeItem
                 nodeId={id}
                 key={id}
@@ -343,7 +392,7 @@ export default function App() {
         const keyRefs = instruments.get(inst) as Array<KeyRef>
         return keyRefs.filter(keyRefSearchFilter).map(keyRef => {
             // Add inst to id to make it unique
-            const id = makeKeyItemId(keyRef.dict, keyRef.key) + sep + inst;
+            const id = makeKeyItemId(keyRef.extension, keyRef.category, keyRef.key) + sep + inst;
             return <StyledTreeItem
                 nodeId={id}
                 key={id}
@@ -360,8 +409,46 @@ export default function App() {
         setExpanded(nodeIds);
     }
 
+    // Makes the tree nodes for the categories of FITS keys
+    function makeCategoryItems(extension: Extension): Array<JSX.Element> {
+        return extension.categories.map(category => {
+                const id = extension.name + sep + category.name
+                return <StyledTreeItem
+                    key={id}
+                    nodeId={id}
+                    labelText={category.name}
+                    labelIcon={FolderIcon}>
+                    {keyItems(extension, category)}
+                </StyledTreeItem>
+            }
+        );
+    }
+
+    // Makes the tree nodes for the extensions
+    const extensionItems =
+        extensions.map(e =>
+            <StyledTreeItem
+                key={e.name}
+                nodeId={e.name}
+                labelText={e.name}
+                labelIcon={FolderIcon}>
+                {makeCategoryItems(e)}
+            </StyledTreeItem>
+        );
+
+    // Makes the tree nodes for the instruments
+    const instItems = instNames.map(inst => {
+        return <StyledTreeItem
+            key={inst}
+            nodeId={inst}
+            labelText={inst}
+            labelIcon={FolderIcon}>
+            {instKeyItems(inst)}
+        </StyledTreeItem>;
+    });
+
     // Makes the tree displaying the categories of FITS keys
-    function makeTreeView(classes: ClassNameMap, catItems: JSX.Element[], instItems: JSX.Element[]) {
+    function makeTreeView(classes: ClassNameMap) {
         return <TreeView
             className={classes.root}
             defaultCollapseIcon={<ArrowDropDownIcon/>}
@@ -372,11 +459,11 @@ export default function App() {
             expanded={expanded}
         >
             <StyledTreeItem
-                key={"Dictionary"}
-                nodeId={"Dictionary"}
-                labelText={"Dictionary"}
+                key={rootNodeLabel}
+                nodeId={rootNodeLabel}
+                labelText={rootNodeLabel}
                 labelIcon={FolderIcon}>
-                {catItems.concat(instItems)}
+                {extensionItems.concat(instItems)}
             </StyledTreeItem>
         </TreeView>;
     }
@@ -397,29 +484,33 @@ export default function App() {
 
     // Makes the detailed view displayed when you select a tree node with a FITS key
     function makeDetailView() {
-        const [category, key] = selectedNode.split(sep)
-        if (key) {
-            const cat = dictionaries.find(c => c.category === category)
-            if (cat) {
-                const keyItem = cat.keys.find(k => k.name === key)
-                if (keyItem) {
-                    return <div>
-                        <h2>{keyItem.name}</h2>
-                        <h3>{keyItem.title}</h3>
-                        <p>{keyItem.description}</p>
-                        <table>
-                            <thead key={"thead"}>
-                            <tr>
-                                <th key={"Attribute"}>Attribute</th>
-                                <th key={"Value"}>Value</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {makeKeyRows(keyItem)}
-                            </tbody>
-                        </table>
-                    </div>
+        const [extensionName, categoryName, keyName] = selectedNode.split(sep)
+        if (keyName) {
+            const extension = extensions.find(e => e.name === extensionName)
+            if (extension) {
+                const category = extension.categories.find(c => c.name === categoryName)
+                if (category) {
+                    const keyItem = category.keys.find(k => k.name === keyName)
+                    if (keyItem) {
+                        return <div>
+                            <h2>{keyItem.name}</h2>
+                            <h3>{keyItem.title}</h3>
+                            <p>{keyItem.description}</p>
+                            <table>
+                                <thead key={"thead"}>
+                                <tr>
+                                    <th key={"Attribute"}>Attribute</th>
+                                    <th key={"Value"}>Value</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {makeKeyRows(keyItem)}
+                                </tbody>
+                            </table>
+                        </div>
+                    }
                 }
+
             }
         }
         return <div><p>Click on a keyword in the tree to show the details.</p></div>
@@ -490,29 +581,7 @@ export default function App() {
         );
     }
 
-    // Makes the tree nodes for the categories of FITS keys
-    const catItems = dictionaries.map(dict =>
-        <StyledTreeItem
-            key={dict.category}
-            nodeId={dict.category}
-            labelText={dict.category}
-            labelIcon={FolderIcon}>
-            {keyItems(dict)}
-        </StyledTreeItem>
-    );
-
-    // Makes the tree nodes for the instruments
-    const instItems = instNames.map( inst => {
-        return <StyledTreeItem
-            key={inst}
-            nodeId={inst}
-            labelText={inst}
-            labelIcon={FolderIcon}>
-            {instKeyItems(inst)}
-        </StyledTreeItem>;
-    });
-
-    const treeView = makeTreeView(classes, catItems, instItems);
+    const treeView = makeTreeView(classes);
     const detailView = makeDetailView();
 
     // Do the layout in a grid

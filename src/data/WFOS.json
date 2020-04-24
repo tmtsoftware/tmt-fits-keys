@@ -1,5 +1,5 @@
 [
-  "Standard Parameters|SIMPLE",
-  "Standard Parameters|BITPIX",
-  "Basic Parameters|DATE"
+  "Primary Header|Standard Keywords|SIMPLE",
+  "Primary Header|Standard Keywords|BITPIX",
+  "Primary Header|Basic Keywords|DATE"
 ]
