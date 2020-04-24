@@ -238,7 +238,9 @@ function StyledTreeItem(props: StyledTreeItemProps): JSX.Element {
         {...other}
     >
         {React.Children.map(children, child => {
-            // includ depth property to child element
+            // include depth property to child element:
+            // See issue with indenting child tree nodes correctly:
+            // https://stackoverflow.com/questions/58810918/material-ui-treeview-from-lab-incorrectly-aligns-3rd-child-node
             return React.cloneElement(child as ReactElement<any>, {depth: depth + 1});
         })}
     </TreeItem>
