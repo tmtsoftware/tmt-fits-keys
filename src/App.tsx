@@ -509,8 +509,9 @@ export default function App() {
                 nodeId={rootNodeLabel}
                 labelText={rootNodeLabel}
                 labelIcon={FolderIcon}>
-                {extensionItems.concat(instItems)}
+                {extensionItems}
             </StyledTreeItem>
+            {instItems}
         </TreeView>;
     }
 
