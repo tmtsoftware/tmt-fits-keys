@@ -194,7 +194,27 @@ instruments.set("IRIS", getKeysForIds(irisIds))
 instruments.set("MODHIS", getKeysForIds(modhisIds))
 instruments.set("WFOS", getKeysForIds(wfosIds))
 
-const topLevelNodes = [rootNodeLabel].concat(extensionNames).concat(instNames)
+// Makes a nodeId for a key tree node
+function makeKeyItemId(extension: Extension, category: Category, key: Key) {
+    return extension.name + sep + category.name + sep + key.name;
+}
+
+// Makes a nodeId for a category tree node
+function makeCategoryItemId(extension: Extension, category: Category) {
+    return extension.name + sep + category.name;
+}
+
+const allCategoryIds = extensions.flatMap(e => e.categories.map(c => makeCategoryItemId(e, c)))
+const allInstExtensionIds = instNames.flatMap(inst =>
+    (instruments.get(inst) as KeyRef[]).map(keyRef =>
+        keyRef.extension.name + sep + inst))
+const allInstCategoryIds = instNames.flatMap(inst =>
+    (instruments.get(inst) as KeyRef[]).map(keyRef =>
+        makeCategoryItemId(keyRef.extension, keyRef.category) + sep + inst))
+
+// Expand these nodes when the expand button is pressed of the user types in the search box
+const topLevelNodes = [rootNodeLabel].concat(extensionNames).concat(allCategoryIds)
+    .concat(instNames).concat(allInstExtensionIds).concat(allInstCategoryIds)
 
 function StyledTreeItem(props: StyledTreeItemProps): JSX.Element {
     const classes = useTreeItemStyles();
@@ -355,16 +375,6 @@ export default function App() {
 
     const classes = useStyles();
 
-    // Makes a nodeId for a key tree node
-    function makeKeyItemId(extension: Extension, category: Category, key: Key) {
-        return extension.name + sep + category.name + sep + key.name;
-    }
-
-    // Makes a nodeId for a category tree node
-    function makeCategoryItemId(extension: Extension, category: Category) {
-        return extension.name + sep + category.name;
-    }
-
     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setChecked(event.target.checked);
     };
@@ -416,7 +426,7 @@ export default function App() {
                 labelText={category.name}
                 labelIcon={FolderIcon}>
                 {instKeyItems(inst, extension, category,
-                    keyRefs.filter(k => k.extension === extension && k.category == category))}
+                    keyRefs.filter(k => k.extension === extension && k.category === category))}
             </StyledTreeItem>
         })
     }

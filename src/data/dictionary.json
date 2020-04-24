@@ -296,7 +296,155 @@
               ]
             }
           ]
+        },
+        {
+          "name": "Programmatic Keywords",
+          "keys": [
+            {
+              "name": "TITLE",
+              "title": "Proposal title",
+              "description": "Proposal title. The proposal title can have a length of up to 150 characters. This is longer than the 68 characters available to a single FITS keyword value. The TITLE keyword will use the FITS long string value convention to end incomplete values with an ampersand and continue the value in next record with a CONTINUE element.",
+              "attributes": [
+                {
+                  "name": "type",
+                  "value": "string"
+                },
+                {
+                  "name": "sql_dtype",
+                  "value": "nvarchar(150)"
+                },
+                {
+                  "name": "calculation",
+                  "value": ""
+                },
+                {
+                  "name": "default_value",
+                  "value": "UNKNOWN"
+                },
+                {
+                  "name": "example",
+                  "value": "Cryo2 SIC NIRISS"
+                },
+                {
+                  "name": "units",
+                  "value": ""
+                },
+                {
+                  "name": "sw_source",
+                  "value": "PPS:dms_program_view.title"
+                },
+                {
+                  "name": "source",
+                  "value": "Proposal and Planning System (PPS)"
+                },
+                {
+                  "name": "level",
+                  "value": "1b"
+                },
+                {
+                  "name": "si",
+                  "value": "Multiple"
+                },
+                {
+                  "name": "section",
+                  "value": "Programmatic Keywords"
+                },
+                {
+                  "name": "mode",
+                  "value": "All"
+                },
+                {
+                  "name": "fits_hdu",
+                  "value": "PRIMARY"
+                },
+                {
+                  "name": "special_processing",
+                  "value": "undefined"
+                },
+                {
+                  "name": "destination",
+                  "value": "ScienceCommon.title, GuideStar.title"
+                },
+                {
+                  "name": "enum",
+                  "value": "undefined"
+                }
+              ]
+            },
+            {
+              "name": "PI_NAME",
+              "title": "Principal investigator name",
+              "description": "Name of principal investigator (last, first, mi). For JWST, the PI_NAME keyword concatenates the Principle Investigator last name, suffix (if any), first name, and middle initial into a comma separated value string for a single keyword.",
+              "attributes": [
+                {
+                  "name": "type",
+                  "value": "string"
+                },
+                {
+                  "name": "sql_dtype",
+                  "value": "nvarchar(183)"
+                },
+                {
+                  "name": "calculation",
+                  "value": "= apt('./ProposalInformation/PrincipalInvestigator/InvestigatorAddress/LastName') + ', ' + apt('./ProposalInformation/PrincipalInvestigator/InvestigatorAddress/FirstName')"
+                },
+                {
+                  "name": "default_value",
+                  "value": "UNKNOWN"
+                },
+                {
+                  "name": "example",
+                  "value": "Smith,Dr,Jane,D"
+                },
+                {
+                  "name": "units",
+                  "value": ""
+                },
+                {
+                  "name": "sw_source",
+                  "value": "PROPSERVICE:get_investigator:TELESCOP:PROGRAM:CATEGORY"
+                },
+                {
+                  "name": "source",
+                  "value": "TMT Identity Source Provider"
+                },
+                {
+                  "name": "level",
+                  "value": "1b"
+                },
+                {
+                  "name": "si",
+                  "value": "Multiple"
+                },
+                {
+                  "name": "section",
+                  "value": "Programmatic Keywords"
+                },
+                {
+                  "name": "mode",
+                  "value": "All"
+                },
+                {
+                  "name": "fits_hdu",
+                  "value": "PRIMARY"
+                },
+                {
+                  "name": "special_processing",
+                  "value": "undefined"
+                },
+                {
+                  "name": "destination",
+                  "value": "ScienceCommon.pi_name, GuideStar.pi_name"
+                },
+                {
+                  "name": "enum",
+                  "value": "undefined"
+                }
+              ]
+            }
+          ]
         }
+
       ]
     },
     {
