@@ -4,22 +4,18 @@
       "name": "Primary Header",
       "categories": [
         {
-          "name": "Standard Keywords",
+          "name": "Minimal Keywords",
           "keys": [
             {
               "name": "SIMPLE",
-              "title": "Data conform to FITS standard",
-              "description": "The <strong>SIMPLE</strong> keyword is required to be the first keyword in the primary header of all standard FITS files and is not permitted in extention headers. The value shall contain a logical constant with the value T if the file conforms to this standard.",
+              "title": "File conforms to the FITS standard",
+              "description": "The SIMPLE keyword is required to be the first keyword in the primary header of all standard FITS files and is not permitted in extension headers. The value shall contain a logical constant with the value T if the file conforms to the FITS standard.",
               "attributes": [
                 {
                   "name": "type",
                   "value": "boolean"
                 },
                 {
-                  "name": "sql_dtype",
-                  "value": "nchar(1)"
-                },
-                {
                   "name": "calculation",
                   "value": ""
                 },
@@ -33,62 +29,85 @@
                 },
                 {
                   "name": "units",
-                  "value": ""
+                  "value": "none"
                 },
                 {
-                  "name": "sw_source",
-                  "value": "calculation"
+                  "name": "mandatory",
+                  "value": "T"
                 },
                 {
-                  "name": "source",
-                  "value": ""
+                  "name": "minimal",
+                  "value": "T"
                 },
                 {
-                  "name": "level",
-                  "value": "1a"
+                  "name": "position",
+                  "value": 1
                 },
                 {
-                  "name": "si",
-                  "value": "Multiple"
-                },
-                {
-                  "name": "section",
-                  "value": "Basic"
-                },
-                {
-                  "name": "mode",
-                  "value": "All"
-                },
-                {
-                  "name": "fits_hdu",
+                  "name": "FITS HDU",
                   "value": "PRIMARY"
                 },
                 {
-                  "name": "special_processing",
-                  "value": "undefined"
-                },
-                {
-                  "name": "destination",
-                  "value": "undefined"
-                },
-                {
-                  "name": "enum",
-                  "value": "undefined"
+                  "name": "source",
+                  "value": "Creator of the FITS file"
                 }
               ]
             },
             {
               "name": "BITPIX",
-              "title": "bits per data value",
-              "description": "The value field shall contain an integer that specifies the number of bits that represent a data value in the associated data array. BITPIX = 0 for the primary header. For an image extension, 16 is uncalibrated and -32 is calibrated. For group information captured in an ASCII table extension BITPIX = 8, denoting that the array contains ASCII characters.",
+              "title": "Indicates the size of each data value",
+              "description": "The value field shall contain an integer. The absolute value of the integer is used to construct the size of data structures. The values must be 0 for the primary header.",
               "attributes": [
                 {
                   "name": "type",
                   "value": "integer"
                 },
                 {
-                  "name": "sql_dtype",
-                  "value": "smallint"
+                  "name": "calculation",
+                  "value": ""
+                },
+                {
+                  "name": "default_value",
+                  "value": "0"
+                },
+                {
+                  "name": "example",
+                  "value": "0"
+                },
+                {
+                  "name": "units",
+                  "value": "none"
+                },
+                {
+                  "name": "mandatory",
+                  "value": "T"
+                },
+                {
+                  "name": "minimal",
+                  "value": "T"
+                },
+                {
+                  "name": "position",
+                  "value": 2
+                },
+                {
+                  "name": "FITS HDU",
+                  "value": "SCI DQ ERR"
+                },
+                {
+                  "name": "source",
+                  "value": "Creator of the FITS file"
+                }
+              ]
+            },
+            {
+              "name": "NAXIS",
+              "title": "Indicates the number of axes in the data array",
+              "description": "The value field shall contain a non-negative integer no greater than 999 representing the number of axes in the associated data array. A value of 0 indicates that no data follow the header in the HDU. ",
+              "attributes": [
+                {
+                  "name": "type",
+                  "value": "integer"
                 },
                 {
                   "name": "calculation",
@@ -104,47 +123,426 @@
                 },
                 {
                   "name": "units",
-                  "value": ""
+                  "value": "none"
                 },
                 {
-                  "name": "sw_source",
-                  "value": "calculation"
+                  "name": "mandatory",
+                  "value": "T"
+                },
+                {
+                  "name": "minimal",
+                  "value": "T"
+                },
+                {
+                  "name": "position",
+                  "value": 3
+                },
+                {
+                  "name": "FITS HDU",
+                  "value": "PRIMARY SCI DQ ERR"
                 },
                 {
                   "name": "source",
+                  "value": "Creator of the FITS file"
+                }
+              ]
+            },
+            {
+              "name": "EXTEND",
+              "title": "FITS file can contain conforming extensions following the Primary HDU",
+              "description": "TMT FITS files always contain extensions. The EXTEND keyword should always be included with a value set to T.",
+              "attributes": [
+                {
+                  "name": "type",
+                  "value": "boolean"
+                },
+                {
+                  "name": "calculation",
                   "value": ""
                 },
                 {
-                  "name": "level",
-                  "value": "1a"
+                  "name": "default_value",
+                  "value": "T"
                 },
                 {
-                  "name": "si",
-                  "value": "Multiple"
+                  "name": "example",
+                  "value": "T"
                 },
                 {
-                  "name": "section",
-                  "value": "Basic"
+                  "name": "units",
+                  "value": "none"
                 },
                 {
-                  "name": "mode",
-                  "value": "All"
+                  "name": "mandatory",
+                  "value": "T"
                 },
                 {
-                  "name": "fits_hdu",
+                  "name": "minimal",
+                  "value": "T"
+                },
+                {
+                  "name": "position",
+                  "value": 4
+                },
+                {
+                  "name": "FITS HDU",
                   "value": "PRIMARY"
                 },
                 {
-                  "name": "special_processing",
-                  "value": "undefined"
+                  "name": "source",
+                  "value": "Creator of the FITS file"
+                }
+              ]
+            },
+            {
+              "name": "NEXTEND",
+              "title": "Number of extensions in the FITS file",
+              "description": "Value indicates the number of FITS extensions in the MEF file.",
+              "attributes": [
+                {
+                  "name": "type",
+                  "value": "integer"
                 },
                 {
-                  "name": "destination",
-                  "value": "undefined"
+                  "name": "calculation",
+                  "value": ""
                 },
                 {
-                  "name": "enum",
-                  "value": "undefined"
+                  "name": "default_value",
+                  "value": 1
+                },
+                {
+                  "name": "example",
+                  "value": 1
+                },
+                {
+                  "name": "units",
+                  "value": "none"
+                },
+                {
+                  "name": "mandatory",
+                  "value": "T"
+                },
+                {
+                  "name": "minimal",
+                  "value": "T"
+                },
+                {
+                  "name": "position",
+                  "value": 5
+                },
+                {
+                  "name": "FITS HDU",
+                  "value": "PRIMARY"
+                },
+                {
+                  "name": "source",
+                  "value": "Creator of the FITS file"
+                }
+              ]
+            },
+            {
+              "name": "INSTRUME",
+              "title": "Instrument Indentifier",
+              "description": "A minimal header keyword identifying the TMT instrument used to acquire the data associated with the header.",
+              "attributes": [
+                {
+                  "name": "type",
+                  "value": "string"
+                },
+                {
+                  "name": "calculation",
+                  "value": ""
+                },
+                {
+                  "name": "default_value",
+                  "value": "SUBSYSTEM"
+                },
+                {
+                  "name": "example",
+                  "value": "WFOS"
+                },
+                {
+                  "name": "units",
+                  "value": "none"
+                },
+                {
+                  "name": "mandatory",
+                  "value": "T"
+                },
+                {
+                  "name": "minimal",
+                  "value": "T"
+                },
+                {
+                  "name": "position",
+                  "value": 6
+                },
+                {
+                  "name": "FITS HDU",
+                  "value": "PRIMARY"
+                },
+                {
+                  "name": "source",
+                  "value": "Creator of the FITS file"
+                }
+              ]
+            },
+            {
+              "name": "TELESCOP",
+              "title": "Telescope indentifier",
+              "description": "A minimal header keyword identifying that the TMT telescope was used to acquire the data associated with the header.",
+              "attributes": [
+                {
+                  "name": "type",
+                  "value": "string"
+                },
+                {
+                  "name": "calculation",
+                  "value": ""
+                },
+                {
+                  "name": "default_value",
+                  "value": "TMT"
+                },
+                {
+                  "name": "example",
+                  "value": "TMT"
+                },
+                {
+                  "name": "units",
+                  "value": "none"
+                },
+                {
+                  "name": "mandatory",
+                  "value": "T"
+                },
+                {
+                  "name": "minimal",
+                  "value": "T"
+                },
+                {
+                  "name": "position",
+                  "value": 7
+                },
+                {
+                  "name": "FITS HDU",
+                  "value": "PRIMARY"
+                },
+                {
+                  "name": "source",
+                  "value": "Creator of the FITS file"
+                }
+              ]
+            },
+            {
+              "name": "TIMESYS",
+              "title": "The time scale of all time related keywords",
+              "description": "The value field contains a character-string code for the time scale of the time-related keywords. For TMT, this value must always be 'UTC'.",
+              "attributes": [
+                {
+                  "name": "type",
+                  "value": "string"
+                },
+                {
+                  "name": "calculation",
+                  "value": ""
+                },
+                {
+                  "name": "default_value",
+                  "value": "UTC"
+                },
+                {
+                  "name": "example",
+                  "value": "UTC"
+                },
+                {
+                  "name": "units",
+                  "value": "none"
+                },
+                {
+                  "name": "mandatory",
+                  "value": "T"
+                },
+                {
+                  "name": "minimal",
+                  "value": "T"
+                },
+                {
+                  "name": "position",
+                  "value": 8
+                },
+                {
+                  "name": "FITS HDU",
+                  "value": "PRIMARY"
+                },
+                {
+                  "name": "source",
+                  "value": "Creator of the FITS file"
+                }
+              ]
+            },
+            {
+              "name": "DATE-BEG",
+              "title": "The start time of data acquisition",
+              "description": "The value field of this keyword contains a string in ISO-8601 format that specifies the start time of data acquisition in the time system specified by the TIMESYS keyword.",
+              "attributes": [
+                {
+                  "name": "type",
+                  "value": "string"
+                },
+                {
+                  "name": "calculation",
+                  "value": ""
+                },
+                {
+                  "name": "default_value",
+                  "value": "current time"
+                },
+                {
+                  "name": "example",
+                  "value": "yyyy-mm-ddTHH:MM:SS[.sss]"
+                },
+                {
+                  "name": "units",
+                  "value": "none"
+                },
+                {
+                  "name": "mandatory",
+                  "value": "T"
+                },
+                {
+                  "name": "minimal",
+                  "value": "T"
+                },
+                {
+                  "name": "position",
+                  "value": 9
+                },
+                {
+                  "name": "FITS HDU",
+                  "value": "PRIMARY"
+                },
+                {
+                  "name": "source",
+                  "value": "Creator of the FITS file - reads clock time"
+                }
+              ]
+            },
+            {
+              "name": "DATE-END",
+              "title": "The end time of data acquisition",
+              "description": "The value field of this keyword contains a string in ISO-8601 format that specifies the end time of data acquisition in the time system specified by the TIMESYS keyword.",
+              "attributes": [
+                {
+                  "name": "type",
+                  "value": "string"
+                },
+                {
+                  "name": "calculation",
+                  "value": ""
+                },
+                {
+                  "name": "default_value",
+                  "value": "current time"
+                },
+                {
+                  "name": "example",
+                  "value": "yyyy-mm-ddTHH:MM:SS[.sss]"
+                },
+                {
+                  "name": "units",
+                  "value": "none"
+                },
+                {
+                  "name": "mandatory",
+                  "value": "T"
+                },
+                {
+                  "name": "minimal",
+                  "value": "T"
+                },
+                {
+                  "name": "position",
+                  "value": 10
+                },
+                {
+                  "name": "FITS HDU",
+                  "value": "PRIMARY"
+                },
+                {
+                  "name": "source",
+                  "value": "Creator of the FITS file - reads clock time"
+                }
+              ]
+            },
+            {
+              "name": "EXPOSID",
+              "title": "The TMT exposure ID for the data",
+              "description": "Keyword value is a string that is the TMT-standard ExposureId for the exposure. Format must follow the TMT specification.",
+              "attributes": [
+                {
+                  "name": "type",
+                  "value": "string"
+                },
+                {
+                  "name": "calculation",
+                  "value": ""
+                },
+                {
+                  "name": "default_value",
+                  "value": ""
+                },
+                {
+                  "name": "example",
+                  "value": "2034A-P053-O020-IRIS-IMG2-SCI0-0002"
+                },
+                {
+                  "name": "units",
+                  "value": "none"
+                },
+                {
+                  "name": "mandatory",
+                  "value": "T"
+                },
+                {
+                  "name": "minimal",
+                  "value": "T"
+                },
+                {
+                  "name": "position",
+                  "value": 11
+                },
+                {
+                  "name": "FITS HDU",
+                  "value": "PRIMARY"
+                },
+                {
+                  "name": "source",
+                  "value": "Creator of the FITS file - Exposure ID is provided by ESW to the detector system."
+                }
+              ]
+            },
+            {
+              "name": "END",
+              "title": "Indicates the end of the header",
+              "description": "The END keyword has no associated value. Bytes 9 through 80 shall be filled with ASCII spaces (decimal 32 or hex- adecimal 20). The END keyword marks the logical end of the header and must occur in the last 2880-byte FITS block of the header.",
+              "attributes": [
+                {
+                  "name": "minimal",
+                  "value": "T"
+                },
+                {
+                  "name": "position",
+                  "value": -1
+                },
+                {
+                  "name": "FITS HDU",
+                  "value": "PRIMARY SCI DQ ERR"
+                },
+                {
+                  "name": "source",
+                  "value": "Creator of the FITS file"
                 }
               ]
             }
@@ -444,11 +842,10 @@
             }
           ]
         }
-
       ]
     },
     {
-      "name": "Data Quality Extension",
+      "name": "SCI Image Extension",
       "categories": [
         {
           "name": "Standard Keywords",
@@ -747,7 +1144,469 @@
       ]
     },
     {
-      "name": "Error Extension",
+      "name": "DQ Data Quality Extension",
+      "categories": [
+        {
+          "name": "Standard Keywords",
+          "keys": [
+            {
+              "name": "BITPIX",
+              "title": "Indicates the size of each data value",
+              "description": "The value field shall contain an integer. The absolute value of the integer is used to construct the size of data structures. The only allowed values are in the SCI extension are: 16 for 16-bit 2's complement binary integers, 32 for 32-bit 2's complement binary integers, 64 for 64-bit 2's complement binary integers, -32 for IEEE single-precision floating point, or -64 for IEEE double-precision floating point.",
+              "attributes": [
+                {
+                  "name": "type",
+                  "value": "integer"
+                },
+                {
+                  "name": "calculation",
+                  "value": ""
+                },
+                {
+                  "name": "default_value",
+                  "value": "0"
+                },
+                {
+                  "name": "example",
+                  "value": "0"
+                },
+                {
+                  "name": "units",
+                  "value": "none"
+                },
+                {
+                  "name": "mandatory",
+                  "value": "T"
+                },
+                {
+                  "name": "minimal",
+                  "value": "T"
+                },
+                {
+                  "name": "position",
+                  "value": 2
+                },
+                {
+                  "name": "FITS HDU",
+                  "value": "SCI DQ ERR"
+                },
+                {
+                  "name": "source",
+                  "value": "Creator of the FITS file"
+                }
+              ]
+            },
+            {
+              "name": "NAXIS",
+              "title": "Indicates the number of axes in the data array",
+              "description": "The value field shall contain a non-negative integer no greater than 999 representing the number of axes in the associated data array. A value of 0 indicates that no data follow the header in the HDU. ",
+              "attributes": [
+                {
+                  "name": "type",
+                  "value": "integer"
+                },
+                {
+                  "name": "calculation",
+                  "value": ""
+                },
+                {
+                  "name": "default_value",
+                  "value": "0"
+                },
+                {
+                  "name": "example",
+                  "value": "0"
+                },
+                {
+                  "name": "units",
+                  "value": "none"
+                },
+                {
+                  "name": "mandatory",
+                  "value": "T"
+                },
+                {
+                  "name": "minimal",
+                  "value": "T"
+                },
+                {
+                  "name": "position",
+                  "value": 3
+                },
+                {
+                  "name": "FITS HDU",
+                  "value": "SCI DQ ERR"
+                },
+                {
+                  "name": "source",
+                  "value": "Creator of the FITS file"
+                }
+              ]
+            },
+            {
+              "name": "NAXIS1",
+              "title": "Indicates the number of elements in the data array for axis 1",
+              "description": "The value field of this indexed keyword shall contain a non-negative integer representing the number of elements along axis n=1 of a data array. The NAXISn must be present for all values n = 1,..., NAXIS, and for no other values of n. A value of zero for any of the NAXISn signifies that no data follow the header in the HDU. If NAXIS is equal to 0, there should not be any NAXISn keywords.",
+              "attributes": [
+                {
+                  "name": "type",
+                  "value": "integer"
+                },
+                {
+                  "name": "calculation",
+                  "value": ""
+                },
+                {
+                  "name": "default_value",
+                  "value": "0"
+                },
+                {
+                  "name": "example",
+                  "value": "1024"
+                },
+                {
+                  "name": "units",
+                  "value": "none"
+                },
+                {
+                  "name": "mandatory",
+                  "value": "T if data has NAXIS>=1, otherwise F"
+                },
+                {
+                  "name": "minimal",
+                  "value": "T if data has NAXIS>=1, otherwise F"
+                },
+                {
+                  "name": "position",
+                  "value": 4
+                },
+                {
+                  "name": "FITS HDU",
+                  "value": "SCI DQ ERR"
+                },
+                {
+                  "name": "source",
+                  "value": "Creator of the FITS file"
+                }
+              ]
+            },
+            {
+              "name": "NAXIS2",
+              "title": "Indicates the number of elements in the data array for axis 2",
+              "description": "The value field of this indexed keyword shall contain a non-negative integer representing the number of elements along axis n=2 of a data array. The NAXISn must be present for all values n = 1,..., NAXIS, and for no other values of n. A value of zero for any of the NAXISn signifies that no data follow the header in the HDU. If NAXIS is equal to 0, there should not be any NAXISn keywords.",
+              "attributes": [
+                {
+                  "name": "type",
+                  "value": "integer"
+                },
+                {
+                  "name": "calculation",
+                  "value": ""
+                },
+                {
+                  "name": "default_value",
+                  "value": "0"
+                },
+                {
+                  "name": "example",
+                  "value": "1024"
+                },
+                {
+                  "name": "units",
+                  "value": "none"
+                },
+                {
+                  "name": "mandatory",
+                  "value": "T if data has NAXIS>=2, otherwise F"
+                },
+                {
+                  "name": "minimal",
+                  "value": "T if data has NAXIS>=2, otherwise F"
+                },
+                {
+                  "name": "position",
+                  "value": 5
+                },
+                {
+                  "name": "FITS HDU",
+                  "value": "SCI DQ ERR"
+                },
+                {
+                  "name": "source",
+                  "value": "Creator of the FITS file"
+                }
+              ]
+            },
+            {
+              "name": "NAXIS3",
+              "title": "Indicates the number of elements in the data array for axis 3",
+              "description": "The value field of this indexed keyword shall contain a non-negative integer representing the number of elements along axis n=3 of a data array. The NAXISn must be present for all values n = 1,..., NAXIS, and for no other values of n. A value of zero for any of the NAXISn signifies that no data follow the header in the HDU. If NAXIS is equal to 0, there should not be any NAXISn keywords.",
+              "attributes": [
+                {
+                  "name": "type",
+                  "value": "integer"
+                },
+                {
+                  "name": "calculation",
+                  "value": ""
+                },
+                {
+                  "name": "default_value",
+                  "value": "0"
+                },
+                {
+                  "name": "example",
+                  "value": "1024"
+                },
+                {
+                  "name": "units",
+                  "value": "none"
+                },
+                {
+                  "name": "mandatory",
+                  "value": "T if data has NAXIS>=3, otherwise F"
+                },
+                {
+                  "name": "minimal",
+                  "value": "T if data has NAXIS>=3, otherwise F"
+                },
+                {
+                  "name": "position",
+                  "value": 6
+                },
+                {
+                  "name": "FITS HDU",
+                  "value": "SCI DQ ERR"
+                },
+                {
+                  "name": "source",
+                  "value": "Creator of the FITS file"
+                }
+              ]
+            },
+            {
+              "name": "NAXIS4",
+              "title": "Indicates the number of elements in the data array for axis 4",
+              "description": "The value field of this indexed keyword shall contain a non-negative integer representing the number of elements along axis n=4 of a data array. The NAXISn must be present for all values n = 1,..., NAXIS, and for no other values of n. A value of zero for any of the NAXISn signifies that no data follow the header in the HDU. If NAXIS is equal to 0, there should not be any NAXISn keywords.",
+              "attributes": [
+                {
+                  "name": "type",
+                  "value": "integer"
+                },
+                {
+                  "name": "calculation",
+                  "value": ""
+                },
+                {
+                  "name": "default_value",
+                  "value": "0"
+                },
+                {
+                  "name": "example",
+                  "value": "1024"
+                },
+                {
+                  "name": "units",
+                  "value": "none"
+                },
+                {
+                  "name": "mandatory",
+                  "value": "T if data has NAXIS>=4, otherwise F"
+                },
+                {
+                  "name": "minimal",
+                  "value": "T if data has NAXIS>=4, otherwise F"
+                },
+                {
+                  "name": "position",
+                  "value": 7
+                },
+                {
+                  "name": "FITS HDU",
+                  "value": "SCI DQ ERR"
+                },
+                {
+                  "name": "source",
+                  "value": "Creator of the FITS file"
+                }
+              ]
+            },
+            {
+              "name": "END",
+              "title": "Indicates the end of the header",
+              "description": "The END keyword has no associated value. Bytes 9 through 80 shall be filled with ASCII spaces (decimal 32 or hex- adecimal 20). The END keyword marks the logical end of the header and must occur in the last 2880-byte FITS block of the header.",
+              "attributes": [
+                {
+                  "name": "minimal",
+                  "value": "T"
+                },
+                {
+                  "name": "position",
+                  "value": -1
+                },
+                {
+                  "name": "FITS HDU",
+                  "value": "PRIMARY SCI DQ ERR"
+                },
+                {
+                  "name": "source",
+                  "value": "Creator of the FITS file"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Basic Keywords",
+          "keys": [
+            {
+              "name": "DATE",
+              "title": "[yyyy-mm-ddThh:mm:ss.ssssss] UTC date file created",
+              "description": "The UTC date and time when the HDU was created, in the form YYYY-MM-DDThh:mm:ss.ssssss, where YYYY shall be the four-digit calendar year number, MM the two-digit month number with January given by 01 and December by 12, and DD the two-digit day of the month. The literal T shall separate the date and time, hh shall be the two-digit hour in the day, mm the two-digit number of minutes after the hour, and ss.ssssss the number of seconds (two digits followed by a fraction accurate to microseconds) after the minute. Default values must not be given to any portion of the date/time string, and leading zeros must not be omitted.",
+              "attributes": [
+                {
+                  "name": "type",
+                  "value": "string"
+                },
+                {
+                  "name": "sql_dtype",
+                  "value": "datetime2"
+                },
+                {
+                  "name": "calculation",
+                  "value": "Operating system time in the format of YYYY-MM-DDThh:mm:ss.ssssss"
+                },
+                {
+                  "name": "default_value",
+                  "value": ""
+                },
+                {
+                  "name": "example",
+                  "value": "2015-01-01T00:00:00.000001"
+                },
+                {
+                  "name": "units",
+                  "value": ""
+                },
+                {
+                  "name": "sw_source",
+                  "value": ""
+                },
+                {
+                  "name": "source",
+                  "value": ""
+                },
+                {
+                  "name": "level",
+                  "value": "1a"
+                },
+                {
+                  "name": "si",
+                  "value": "Multiple"
+                },
+                {
+                  "name": "section",
+                  "value": "Basic"
+                },
+                {
+                  "name": "mode",
+                  "value": "All"
+                },
+                {
+                  "name": "fits_hdu",
+                  "value": "PRIMARY"
+                },
+                {
+                  "name": "special_processing",
+                  "value": "VALUE_REQUIRED"
+                },
+                {
+                  "name": "destination",
+                  "value": "ScienceCommon.date, GuideStar.date"
+                },
+                {
+                  "name": "enum",
+                  "value": "undefined"
+                }
+              ]
+            },
+            {
+              "name": "ORIGIN",
+              "title": "institution responsible for creating FITS file",
+              "description": "Identifies the organization or institution responsible for creating the FITS file.",
+              "attributes": [
+                {
+                  "name": "type",
+                  "value": "string"
+                },
+                {
+                  "name": "sql_dtype",
+                  "value": "nvarchar(20)"
+                },
+                {
+                  "name": "calculation",
+                  "value": ""
+                },
+                {
+                  "name": "default_value",
+                  "value": "STSCI"
+                },
+                {
+                  "name": "example",
+                  "value": "STSCI"
+                },
+                {
+                  "name": "units",
+                  "value": ""
+                },
+                {
+                  "name": "sw_source",
+                  "value": ""
+                },
+                {
+                  "name": "source",
+                  "value": ""
+                },
+                {
+                  "name": "level",
+                  "value": "1a"
+                },
+                {
+                  "name": "si",
+                  "value": "Multiple"
+                },
+                {
+                  "name": "section",
+                  "value": "Basic"
+                },
+                {
+                  "name": "mode",
+                  "value": "All"
+                },
+                {
+                  "name": "fits_hdu",
+                  "value": "PRIMARY"
+                },
+                {
+                  "name": "special_processing",
+                  "value": "undefined"
+                },
+                {
+                  "name": "destination",
+                  "value": "ScienceCommon.origin, GuideStar.origin"
+                },
+                {
+                  "name": "enum",
+                  "value": "undefined"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "ERR Error Extension",
       "categories": [
         {
           "name": "Standard Keywords",

@@ -32,7 +32,8 @@ import attributes_json from './data/attributes.json';
 import iris_json from './data/IRIS.json';
 import modhis_json from './data/MODHIS.json';
 import wfos_json from './data/WFOS.json';
-
+import dlim_json from './data/DLIM.json';
+import slim_json from './data/SLIM.json';
 
 // Map of attribute to description for the FITS key attributes in data/attributes.json
 // used for tooltips in details table
@@ -97,6 +98,10 @@ interface KeyRef {
 const keywordDictionary = dictionary_json as KeywordDictionary
 const extensions = keywordDictionary.extensions
 const extensionNames = extensions.map(d => d.name)
+
+// Arrays of references to keys for default headers
+const diffractionLimitedIds = dlim_json as Array<string>
+const seeingLimitedIds = slim_json as Array<string>
 
 // Arrays of references to keys for each instrument
 const irisIds = iris_json as Array<string>
@@ -190,7 +195,11 @@ function getKeysForIds(ids: Array<string>): Array<KeyRef> {
 
 // XXX TODO: Simplify/automate this?
 const instruments = new Map<string, Array<KeyRef>>()
-const instNames = ["IRIS", "MODHIS", "WFOS"]
+const instNames = ["Diffraction-Limited Keywords", "Seeing-Limited Keywords", "IRIS", "MODHIS", "WFOS"]
+
+instruments.set("Diffraction-Limited Keywords", getKeysForIds(diffractionLimitedIds))
+instruments.set("Seeing-Limited Keywords", getKeysForIds(seeingLimitedIds))
+
 instruments.set("IRIS", getKeysForIds(irisIds))
 instruments.set("MODHIS", getKeysForIds(modhisIds))
 instruments.set("WFOS", getKeysForIds(wfosIds))
